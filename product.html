@@ -13,8 +13,88 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/store.css">
   <script>document.documentElement.classList.add('js');</script>
+  <style id="preloader-css">
+    /* Preloader: inline so it paints before any other file loads */
+    html.is-loading { overflow: hidden; }
+    .preloader { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; color: #fff;
+      background: radial-gradient(600px 400px at 50% 40%, rgba(58,86,150,.35), transparent 70%), #08101F;
+      clip-path: circle(150% at 50% 50%); transition: clip-path 1s cubic-bezier(.77,0,.18,1); }
+    .preloader.done { clip-path: circle(0% at 50% 50%); }
+    .pl-inner { display: grid; justify-items: center; gap: 18px; font-family: "Alexandria", system-ui, sans-serif; }
+    .pl-orbit { position: relative; width: 150px; height: 150px; display: grid; place-items: center; }
+    .pl-orbit::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1.5px dashed rgba(255,255,255,.18); }
+    .pl-orbit::after { content: ""; position: absolute; inset: 22px; border-radius: 50%; background: radial-gradient(circle, rgba(243,146,55,.22), transparent 70%); animation: pl-pulse 1.6s ease-in-out infinite; }
+    .pl-plane { position: absolute; inset: 0; animation: pl-spin 2.2s linear infinite; }
+    .pl-plane svg { position: absolute; top: -12px; left: 50%; width: 24px; height: 24px; margin-left: -12px; color: #F7B267; transform: rotate(90deg); filter: drop-shadow(0 0 6px rgba(247,178,103,.7)); }
+    .pl-mark { position: relative; z-index: 1; width: 88px; height: 62px; }
+    .pl-mark path { stroke-dasharray: 120; stroke-dashoffset: 120; animation: pl-draw 1.4s ease forwards; }
+    .pl-mark path:nth-child(2) { animation-delay: .12s; } .pl-mark path:nth-child(3) { animation-delay: .24s; }
+    .pl-mark path:nth-child(4) { animation-delay: .36s; } .pl-mark path:nth-child(5) { animation-delay: .5s; }
+    .pl-name { font-size: 24px; font-weight: 700; text-align: center; line-height: 1.3; }
+    .pl-name small { display: block; font-size: 11px; font-weight: 500; letter-spacing: 4px; opacity: .55; direction: ltr; }
+    .pl-bar { width: 190px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; }
+    .pl-bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #F7B267, #F39237); transition: width .25s ease; }
+    .pl-pct { font-size: 13px; color: #F7B267; direction: ltr; font-variant-numeric: tabular-nums; margin-top: -8px; }
+    @keyframes pl-spin { to { transform: rotate(360deg); } }
+    @keyframes pl-draw { to { stroke-dashoffset: 0; } }
+    @keyframes pl-pulse { 50% { transform: scale(1.15); opacity: .6; } }
+    @media (prefers-reduced-motion: reduce) {
+      .pl-plane { animation-duration: 8s; } .pl-mark path { animation: none; stroke-dashoffset: 0; }
+      .preloader { transition: opacity .4s; } .preloader.done { clip-path: none; opacity: 0; }
+    }
+  </style>
 </head>
 <body data-page="packages" data-header="solid">
+  <div class="preloader" id="preloader" role="status" aria-label="جارٍ التحميل">
+    <div class="pl-inner">
+      <div class="pl-orbit">
+        <div class="pl-plane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
+        <svg class="pl-mark" viewBox="0 0 80 56" aria-hidden="true">
+          <defs><linearGradient id="preloaderGradient" gradientUnits="userSpaceOnUse" x1="8" y1="0" x2="72" y2="0"><stop offset="0" stop-color="#B4C6EE"/><stop offset="1" stop-color="#F39237"/></linearGradient></defs>
+          <g fill="none" stroke="url(#preloaderGradient)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M38 44C24 40 10 26 8 4c10 12 20 18 30 22"/><path d="M42 44c14-4 28-18 30-40-10 12-20 18-30 22"/>
+            <path d="M36 35c-10-3-18-10-21-20"/><path d="M44 35c10-3 18-10 21-20"/><path d="M27 51c6-6 20-6 26 0"/>
+          </g>
+        </svg>
+      </div>
+      <div class="pl-name">سهل السفر<small>EASY TRAVEL</small></div>
+      <div class="pl-bar"><i id="preloaderBar"></i></div>
+      <div class="pl-pct" id="preloaderPercent">0%</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var preloader = document.getElementById('preloader');
+      var bar = document.getElementById('preloaderBar');
+      var percent = document.getElementById('preloaderPercent');
+      var MIN_VISIBLE_MS = 1300;
+      var startedAt = Date.now();
+      var progress = 0, pageLoaded = false, finished = false;
+      root.classList.add('is-loading');
+      var setProgress = function (value) {
+        progress = Math.min(100, value);
+        bar.style.width = progress + '%';
+        percent.textContent = Math.round(progress) + '%';
+      };
+      var finish = function () {
+        if (finished) return;
+        finished = true;
+        preloader.classList.add('done');
+        root.classList.remove('is-loading');
+        document.dispatchEvent(new Event('preloader:done'));
+        setTimeout(function () { preloader.remove(); }, 1100);
+      };
+      // Ease toward 90% while loading, then run to 100% once the page has loaded.
+      var timer = setInterval(function () {
+        if (!pageLoaded) { setProgress(progress + (90 - progress) * 0.05); return; }
+        setProgress(progress + 6);
+        if (progress >= 100 && Date.now() - startedAt >= MIN_VISIBLE_MS) { clearInterval(timer); setTimeout(finish, 150); }
+      }, 50);
+      window.addEventListener('load', function () { pageLoaded = true; });
+      setTimeout(function () { pageLoaded = true; }, 8000); // never block the site on a slow image
+    })();
+  </script>
   <main>
     <section class="product-page section">
       <div class="container" id="productRoot"></div>

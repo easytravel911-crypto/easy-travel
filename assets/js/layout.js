@@ -170,6 +170,13 @@
   if (body.dataset.footer !== 'none') document.querySelector('main')?.insertAdjacentHTML('afterend', footerHtml);
   body.insertAdjacentHTML('beforeend', floatsHtml);
 
+  /* ---------- Mark internal navigation (home skips the intro for it) ---------- */
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (!link || link.target === '_blank' || link.origin !== location.origin || /^(https?:)?\/\/wa\.me/.test(link.href)) return;
+    try { sessionStorage.setItem('et-internal-nav', '1'); } catch (error) { /* ignore */ }
+  });
+
   /* ---------- WhatsApp links ---------- */
   ET.bindWhatsapp = (root = document) => {
     root.querySelectorAll('[data-wa]').forEach((element) => {

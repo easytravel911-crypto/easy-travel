@@ -10,6 +10,12 @@
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const introRunning = () => html.classList.contains('is-intro');
   const afterIntro = (callback) => (introRunning() ? document.addEventListener('intro:done', callback, { once: true }) : callback());
+  // Wait for the preloader, then for the home intro (if any).
+  const whenReady = (callback) => {
+    if (html.classList.contains('is-loading')) document.addEventListener('preloader:done', () => whenReady(callback), { once: true });
+    else afterIntro(callback);
+  };
+  const pageCovered = () => html.classList.contains('is-loading') || introRunning();
 
   /* ---------- Smooth scroll (Lenis) ---------- */
   if (!reduceMotion && window.Lenis) {
@@ -17,7 +23,7 @@
     ET.lenis = lenis;
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
-    if (introRunning()) { lenis.stop(); document.addEventListener('intro:done', () => lenis.start(), { once: true }); }
+    if (pageCovered()) { lenis.stop(); whenReady(() => lenis.start()); }
   }
 
   document.querySelectorAll('a[href^="#"]').forEach((link) => {
@@ -72,7 +78,7 @@
   ET.observeReveal = (root = document) => root.querySelectorAll('[data-reveal], [data-split], [data-stagger], .checklist').forEach((element) => {
     if (!element.classList.contains('is-in')) revealObserver.observe(element);
   });
-  afterIntro(() => setTimeout(() => ET.observeReveal(), introRunning() ? 0 : 50));
+  whenReady(() => setTimeout(() => ET.observeReveal(), 50));
 
   /* ---------- Parallax ---------- */
   const parallaxItems = [...document.querySelectorAll('[data-parallax]')];

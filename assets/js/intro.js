@@ -8,7 +8,8 @@
   const intro = document.getElementById('intro');
   if (!intro) return;
   if (!html.classList.contains('is-intro')) { intro.remove(); return; }
-  try { sessionStorage.setItem('et-intro', '1'); } catch (error) { /* ignore */ }
+  // Reduced motion: a short, calm version (slogan + logo, no flight) instead of none.
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const HORIZON = 600;
   const wavePath = (y, amplitude, length) => {
@@ -111,9 +112,25 @@
   };
 
   intro.querySelector('.intro-skip').addEventListener('click', finish);
-  requestAnimationFrame(frame);
-  timers.push(setTimeout(() => intro.classList.add('s-text'), 600));
-  timers.push(setTimeout(() => intro.classList.add('s-clouds'), 3100));
-  timers.push(setTimeout(() => intro.classList.add('s-logo'), 3700));
-  timers.push(setTimeout(finish, 5300));
+
+  const play = () => {
+    if (calm) {
+      plane.style.display = 'none';
+      reflection.style.display = 'none';
+      intro.classList.add('s-text');
+      timers.push(setTimeout(() => intro.classList.add('s-clouds'), 1200));
+      timers.push(setTimeout(() => intro.classList.add('s-logo'), 1400));
+      timers.push(setTimeout(finish, 2800));
+      return;
+    }
+    requestAnimationFrame(frame);
+    timers.push(setTimeout(() => intro.classList.add('s-text'), 600));
+    timers.push(setTimeout(() => intro.classList.add('s-clouds'), 3100));
+    timers.push(setTimeout(() => intro.classList.add('s-logo'), 3700));
+    timers.push(setTimeout(finish, 5300));
+  };
+
+  // The preloader covers the page first; the intro plays once it has gone.
+  if (html.classList.contains('is-loading')) document.addEventListener('preloader:done', play, { once: true });
+  else play();
 })();
