@@ -132,7 +132,10 @@
 .itinerary p { color: var(--muted); font-size: 15px; }
 .incl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; }
 .incl-box { padding: 26px; border-radius: 24px; background: #fff; border: 1px solid var(--line); }
-.incl-box h4 { margin-bottom: 14px; display: flex; gap: 10px; align-items: center; }
+.incl-box h4 { margin-bottom: 14px; display: flex; gap: 10px; align-items: center; font-size: 18px; }
+.incl-box h4 svg { flex: none; width: 30px; height: 30px; padding: 6px; border-radius: 50%; }
+.incl-box.yes h4 svg { background: #DCFCE7; }
+.incl-box.no h4 svg { background: #FEE2E2; }
 .incl-box ul { display: grid; gap: 10px; }
 .incl-box li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
 .incl-box li svg { flex: none; width: 20px; height: 20px; margin-top: 4px; }
