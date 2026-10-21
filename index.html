@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سهل السفر | احجز رحلتك حول العالم</title>
+  <meta name="description" content="سهل السفر: باقات ورحلات سياحية مصممة بعناية، من الطيران والفنادق إلى الجولات والدعم طوال الرحلة. العالم أقرب إليك.">
+  <meta name="theme-color" content="#08101F">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Aref+Ruqaa:wght@700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try {
+        var forced = /[?&]intro/.test(location.search);
+        var seen = sessionStorage.getItem('et-intro');
+        var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (forced || (!seen && !calm)) {
+          root.classList.add('is-intro');
+          // Failsafe: never keep the page locked if the intro script fails to load.
+          setTimeout(function () {
+            if (!root.classList.contains('is-intro')) return;
+            root.classList.remove('is-intro');
+            document.dispatchEvent(new Event('intro:done'));
+          }, 9000);
+        }
+      } catch (error) { /* no intro */ }
+    })();
+  </script>
+</head>
+<body data-page="home">
+  <div class="intro" id="intro" aria-hidden="true"></div>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="stars" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy" data-parallax="-0.06">
+          <span class="hero-badge" data-reveal><b>✈ جديد</b> برامج الشتاء والربيع متاحة للحجز الآن</span>
+          <h1 data-split>احجز رحلتك<br>حول <em>العالم</em><span class="script">العالم أقرب إليك</span></h1>
+          <p class="hero-lead" data-reveal style="--d:500">من الفكرة إلى العودة، نخطط رحلتك بتفاصيل مدروسة: طيران وفنادق وجولات ودعم طوال الطريق. أنت تستمتع، ونحن نهتم بالباقي.</p>
+          <div class="hero-actions" data-reveal style="--d:650">
+            <a class="btn btn-primary btn-lg" href="#packages">اختر باقتك <i data-icon="arrowLeft"></i></a>
+            <a class="btn btn-ghost btn-lg" data-wa="السلام عليكم 👋 أرغب بالتحدث مع مستشار سفر.">
+              <i data-icon="whatsapp"></i> تحدث مع مستشار
+            </a>
+          </div>
+          <div class="hero-trust" data-reveal style="--d:800">
+            <div class="avatars">
+              <img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+              <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+              <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+              <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+            </div>
+            <span><b style="color:#fff">+10 وجهات</b> مختارة بعناية حول العالم</span>
+          </div>
+        </div>
+
+        <div class="globe-wrap" data-reveal="zoom" style="--d:200">
+          <div class="globe-glow" aria-hidden="true"></div>
+          <div class="globe-ring" aria-hidden="true"></div>
+          <canvas id="globe" role="img" aria-label="كرة أرضية تفاعلية تُظهر مسارات الطيران من الرياض إلى وجهاتنا"></canvas>
+          <div class="flight-chip chip-1">
+            <img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+            <div><b dir="ltr">RUH → IST</b><small>إسطنبول · نحو 4 ساعات</small></div>
+          </div>
+          <div class="flight-chip chip-2">
+            <span class="live" aria-hidden="true"></span>
+            <div><b>مستشارك متصل الآن</b><small>نرد عليك خلال دقائق</small></div>
+          </div>
+          <div class="flight-chip chip-3">
+            <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=100&h=100&q=60" alt="">
+            <div><b>شهر العسل</b><small>المالديف · فيلا فوق الماء</small></div>
+          </div>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#planner" aria-label="انزل لتخطيط رحلتك"><span></span>اكتشف</a>
+    </section>
+
+    <!-- ============ PLANNER ============ -->
+    <section class="planner" id="planner">
+      <div class="container">
+        <form class="planner-card" id="plannerForm" data-reveal>
+          <div class="planner-title"><b>خطط رحلتك في 30 ثانية</b><small>ونرسل لك عرضاً على واتساب</small></div>
+          <div class="field"><label for="plannerDestination">إلى أين؟</label><select id="plannerDestination" name="destination" data-destination-select></select></div>
+          <div class="field"><label for="plannerMonth">متى؟</label><select id="plannerMonth" name="month"></select></div>
+          <div class="field">
+            <label for="plannerTravelers">كم مسافر؟</label>
+            <select id="plannerTravelers" name="travelers">
+              <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6 أو أكثر</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit"><i data-icon="whatsapp"></i> أرسل طلبي</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee"><div class="marquee-track">
+        <span>إسطنبول <i data-icon="plane"></i> المالديف <i data-icon="plane"></i> سويسرا <i data-icon="plane"></i> باريس <i data-icon="plane"></i> بالي <i data-icon="plane"></i> جورجيا <i data-icon="plane"></i> كبادوكيا <i data-icon="plane"></i> ماليزيا <i data-icon="plane"></i></span>
+        <span>إسطنبول <i data-icon="plane"></i> المالديف <i data-icon="plane"></i> سويسرا <i data-icon="plane"></i> باريس <i data-icon="plane"></i> بالي <i data-icon="plane"></i> جورجيا <i data-icon="plane"></i> كبادوكيا <i data-icon="plane"></i> ماليزيا <i data-icon="plane"></i></span>
+      </div></div>
+      <div class="marquee"><div class="marquee-track">
+        <span>رحلة بلا عناء ✦ العالم أقرب إليك ✦ احجز رحلتك حول العالم ✦ رحلة بلا عناء ✦ العالم أقرب إليك ✦</span>
+        <span>رحلة بلا عناء ✦ العالم أقرب إليك ✦ احجز رحلتك حول العالم ✦ رحلة بلا عناء ✦ العالم أقرب إليك ✦</span>
+      </div></div>
+    </div>
+
+    <!-- ============ DESTINATIONS ============ -->
+    <section class="section" id="destinations">
+      <div class="container dest-head">
+        <div class="section-head">
+          <span class="kicker">وجهات تنتظرك</span>
+          <h2 data-split>أين ستكون <em>رحلتك القادمة؟</em></h2>
+          <p>اسحب واستكشف. كل وجهة برنامج جاهز يمكن تخصيصه لك بالكامل.</p>
+        </div>
+        <div class="slider-nav">
+          <button type="button" id="destPrev" aria-label="السابق"><i data-icon="arrowRight"></i></button>
+          <button type="button" id="destNext" aria-label="التالي"><i data-icon="arrowLeft"></i></button>
+        </div>
+      </div>
+      <div class="dest-scroller" id="destScroller"></div>
+    </section>
+
+    <!-- ============ PACKAGES ============ -->
+    <section class="section packages" id="packages">
+      <div class="container">
+        <div class="section-head center">
+          <span class="kicker">باقاتنا</span>
+          <h2 data-split>اختر <em>بطاقة صعودك</em></h2>
+          <p>ثلاث باقات تناسب كل مسافر. اختر الأنسب لك واحجز مباشرة عبر واتساب خلال دقائق.</p>
+        </div>
+        <div class="pass-grid" id="passGrid"></div>
+        <p class="pkg-note">الأسعار تقديرية للشخص الواحد وتختلف حسب الوجهة والموسم.
+          <a class="link-arrow" href="packages.html">كل الباقات والرحلات <i data-icon="arrowLeft"></i></a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ JOURNEY ============ -->
+    <section class="section journey" id="journey">
+      <div class="container">
+        <div class="section-head center on-dark">
+          <span class="kicker">كيف نعمل</span>
+          <h2 data-split>من الفكرة إلى <em>الإقلاع</em></h2>
+          <p>أربع خطوات بسيطة، وأنت مرتاح في كل واحدة منها.</p>
+        </div>
+        <svg class="journey-svg" viewBox="0 0 1000 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="journeyGrad" x1="1" y1="0" x2="0" y2="0">
+              <stop offset="0" stop-color="#F7B267"/><stop offset="1" stop-color="#F39237"/>
+            </linearGradient>
+          </defs>
+          <path class="journey-base" d="M1000 120 C 930 120 900 40 820 50 S 700 170 620 150 S 480 40 400 60 S 260 180 180 140 S 60 90 0 100"/>
+          <path id="journeyLine" class="journey-line" d="M1000 120 C 930 120 900 40 820 50 S 700 170 620 150 S 480 40 400 60 S 260 180 180 140 S 60 90 0 100"/>
+          <g id="journeyMarks"></g>
+          <g id="journeyPlane">
+            <g transform="translate(-18 -18) scale(1.5)">
+              <path fill="#fff" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/>
+            </g>
+          </g>
+        </svg>
+        <ol class="journey-steps">
+          <li class="journey-step"><span class="ico"><i data-icon="compass"></i></span><span class="num">01</span><h3>اختر وجهتك</h3><p>تصفح الوجهات أو أخبرنا بما تحب، ونقترح عليك الأنسب.</p></li>
+          <li class="journey-step"><span class="ico"><i data-icon="map"></i></span><span class="num">02</span><h3>نصمم برنامجك</h3><p>برنامج يومي مرتب حسب ميزانيتك ووقتك واهتماماتك.</p></li>
+          <li class="journey-step"><span class="ico"><i data-icon="ticket"></i></span><span class="num">03</span><h3>نؤكد الحجوزات</h3><p>الطيران والفنادق والتنقلات في مكان واحد، مع تأكيد واضح.</p></li>
+          <li class="journey-step"><span class="ico"><i data-icon="plane"></i></span><span class="num">04</span><h3>انطلق مطمئناً</h3><p>فريقنا معك على واتساب من الإقلاع حتى العودة.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ DEPARTURE BOARD ============ -->
+    <section class="section">
+      <div class="container board-wrap">
+        <div class="section-head" data-reveal>
+          <span class="kicker">لوحة المغادرة</span>
+          <h2>أرقام <em class="grad-text">تتحدث عنا</em></h2>
+          <p>كل رقم هنا وراءه مسافر عاد بذكريات جميلة. هدفنا أن تكون أنت القادم.</p>
+          <a class="btn btn-dark" href="about.html" style="margin-top:24px">تعرّف علينا <i data-icon="arrowLeft"></i></a>
+        </div>
+        <div class="board" data-reveal="left">
+          <div class="board-top"><span>المغادرون · DEPARTURES</span><span class="clock"></span></div>
+          <div class="board-row"><span class="board-label">مسافر سعيد<small>HAPPY TRAVELERS</small></span><div class="board-digits" data-text="+4800"></div></div>
+          <div class="board-row"><span class="board-label">وجهة حول العالم<small>DESTINATIONS</small></span><div class="board-digits" data-text="+30"></div></div>
+          <div class="board-row"><span class="board-label">نسبة رضا العملاء<small>SATISFACTION</small></span><div class="board-digits" data-text="98%"></div></div>
+          <div class="board-row"><span class="board-label">دعم متواصل<small>SUPPORT</small></span><div class="board-digits" data-text="24/7"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="section testi">
+      <div class="container testi-grid">
+        <div>
+          <div class="section-head" style="margin-bottom:0">
+            <span class="kicker">بطاقات من مسافرينا</span>
+            <h2 data-split>قصص كُتبت <em>من الطريق</em></h2>
+            <p>أجمل ما نتلقاه بعد كل رحلة: بطاقة شكر من مسافر عاد سعيداً.</p>
+          </div>
+          <div class="testi-controls">
+            <button class="btn btn-dark btn-sm" type="button" id="testiNext">البطاقة التالية <i data-icon="arrowLeft"></i></button>
+            <div class="testi-progress" aria-hidden="true"><i></i></div>
+          </div>
+        </div>
+        <div class="postcards" id="postcards" data-reveal="left"></div>
+      </div>
+    </section>
+
+    <!-- ============ INSPIRATION MOSAIC ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head center">
+          <span class="kicker">إلهام لرحلتك</span>
+          <h2 data-split>العالم <em>بعدسة المسافر</em></h2>
+        </div>
+        <div class="mosaic" data-stagger>
+          <figure><img src="https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1000&q=70" alt="مناطيد كبادوكيا" loading="lazy"><figcaption>كبادوكيا</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=600&q=70" alt="قارب في بحيرة جبلية" loading="lazy"><figcaption>بحيرات الألب</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=70" alt="برج إيفل" loading="lazy"><figcaption>باريس</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=70" alt="معبد في بالي" loading="lazy"><figcaption>بالي</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=70" alt="فلل المالديف فوق الماء" loading="lazy"><figcaption>المالديف</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=600&q=70" alt="تبليسي عند الغروب" loading="lazy"><figcaption>جورجيا</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="cta" data-reveal="zoom">
+          <img class="cta-bg" src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?auto=format&fit=crop&w=1800&q=70" alt="" data-parallax="0.12" loading="lazy">
+          <svg class="cta-plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+          <span class="kicker">جاهز للإقلاع؟</span>
+          <h2>رحلتك القادمة <span class="script">على بُعد رسالة</span></h2>
+          <p>أخبرنا إلى أين تحلم أن تذهب، ونرتب لك كل التفاصيل.</p>
+          <a class="btn btn-wa btn-lg" data-wa="السلام عليكم 👋 أرغب بالتخطيط لرحلتي القادمة مع سهل السفر."><i data-icon="whatsapp"></i> ابدأ المحادثة الآن</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/store.js" defer></script>
+  <script src="assets/js/intro.js" defer></script>
+  <script src="assets/js/globe.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

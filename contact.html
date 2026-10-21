@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تواصل معنا | سهل السفر</title>
+  <meta name="description" content="تواصل مع سهل السفر عبر واتساب أو الاتصال المباشر، ونخطط رحلتك القادمة معاً.">
+  <meta name="theme-color" content="#08101F">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Aref+Ruqaa:wght@700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body data-page="contact">
+  <main>
+    <section class="page-hero">
+      <img class="page-hero-bg" src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1800&q=70" alt="" data-parallax="0.15" data-scale="1.15">
+      <span class="cloud" style="top:24%;--w:220px;--t:42s" aria-hidden="true"></span>
+      <svg class="ph-plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+      <div class="container">
+        <nav class="crumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><span>/</span><span>تواصل معنا</span></nav>
+        <h1 data-split>أرسل لنا <em>بطاقة بريدية</em></h1>
+        <p data-reveal style="--d:400">سؤال؟ فكرة رحلة؟ نحن على بُعد رسالة، ونرد عليك بسرعة.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container contact-grid">
+        <form class="postcard-form" id="contactForm" data-reveal>
+          <div class="form-head">
+            <div>
+              <h2>بطاقة إلى سهل السفر ✉</h2>
+              <p>اكتب رسالتك، وستصلنا مباشرة على واتساب.</p>
+            </div>
+            <div class="stamp" aria-hidden="true"><img src="https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=200&h=240&q=60" alt=""></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="cName">الاسم</label><input id="cName" name="name" required autocomplete="name" placeholder="اسمك الكريم"></div>
+            <div class="field"><label for="cPhone">رقم الجوال</label><input id="cPhone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX" dir="ltr" style="text-align:right"></div>
+            <div class="field full">
+              <label id="topicLabel">موضوع الرسالة</label>
+              <div class="chips" role="radiogroup" aria-labelledby="topicLabel">
+                <input type="radio" name="topic" id="t1" value="استفسار عن رحلة" checked><label for="t1">استفسار عن رحلة</label>
+                <input type="radio" name="topic" id="t2" value="حجز باقة"><label for="t2">حجز باقة</label>
+                <input type="radio" name="topic" id="t3" value="رحلة مخصصة"><label for="t3">رحلة مخصصة</label>
+                <input type="radio" name="topic" id="t4" value="ملاحظة أو شكوى"><label for="t4">ملاحظة أو شكوى</label>
+              </div>
+            </div>
+            <div class="field full"><label for="cDestination">الوجهة (اختياري)</label><select id="cDestination" name="destination" data-destination-select><option value="">لم أحدد بعد</option></select></div>
+            <div class="field full"><label for="cMessage">رسالتك</label><textarea id="cMessage" name="message" required placeholder="أخبرنا عن رحلتك: عدد المسافرين، الموعد المتوقع، وما تحب أن تعيشه..."></textarea></div>
+          </div>
+          <div class="form-foot">
+            <small>بالضغط على إرسال، يُفتح واتساب ومعه رسالتك جاهزة.</small>
+            <button class="btn btn-wa btn-lg" type="submit"><i data-icon="whatsapp"></i> أرسل عبر واتساب</button>
+          </div>
+        </form>
+
+        <div class="contact-cards" data-stagger>
+          <a class="contact-card wa" data-wa="السلام عليكم 👋 أرغب بالتواصل مع سهل السفر.">
+            <span class="ico"><i data-icon="whatsapp"></i></span>
+            <div><small>واتساب (الأسرع)</small><b class="ltr">+966 50 869 5674</b></div>
+          </a>
+          <a class="contact-card" href="tel:+966508695674">
+            <span class="ico"><i data-icon="phone"></i></span>
+            <div><small>اتصال مباشر</small><b class="ltr">+966 50 869 5674</b></div>
+          </a>
+          <div class="contact-card">
+            <span class="ico"><i data-icon="clock"></i></span>
+            <div><small>أوقات الرد</small><b>يومياً · 9 صباحاً – 11 مساءً</b></div>
+          </div>
+          <div class="contact-card">
+            <span class="ico"><i data-icon="pin"></i></span>
+            <div><small>نخدمك من</small><b>المملكة العربية السعودية</b></div>
+          </div>
+          <div class="contact-visual">
+            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=70" alt="جناح طائرة فوق السحاب" loading="lazy">
+            <span>نحن هنا من أجلك ✈</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/store.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تسجيل الدخول | سهل السفر</title>
+  <meta name="description" content="سجّل دخولك إلى سهل السفر لمتابعة حجوزاتك.">
+  <meta name="theme-color" content="#08101F">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Aref+Ruqaa:wght@700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/store.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body data-page="login" data-header="solid" data-footer="none">
+  <main class="auth-page">
+    <div class="auth-visual">
+      <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=70" alt="">
+      <div class="gate-sign">البوابة <span>A12</span> ✈</div>
+      <span class="script">مرحباً بعودتك</span>
+      <p style="color:#D3DAEA;max-width:380px">سجّل دخولك لمتابعة حجوزاتك ورحلاتك المفضلة، ومشاركة تفاصيل سفرك مع مستشارك.</p>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-card">
+        <div class="auth-step">
+          <h1>تسجيل الدخول</h1>
+          <p>أدخل رقم جوالك وسنرسل لك رمز تحقق. لا حاجة لكلمة مرور.</p>
+          <form id="phoneForm" novalidate>
+            <div class="field">
+              <label for="phone">رقم الجوال</label>
+              <div class="phone-input"><span>🇸🇦 +966</span><input id="phone" name="phone" inputmode="numeric" autocomplete="tel-national" placeholder="5X XXX XXXX" maxlength="10"></div>
+              <p class="form-error" id="phoneError" role="alert"></p>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">إرسال رمز التحقق</button>
+          </form>
+          <p class="auth-hint">بالمتابعة أنت توافق على <a href="guarantee.html" style="color:var(--orange)">الشروط وسياسة الضمان</a></p>
+        </div>
+
+        <div class="auth-step" hidden>
+          <h1>رمز التحقق</h1>
+          <p>أرسلنا رمزاً من 4 أرقام إلى <b id="otpPhone" dir="ltr"></b></p>
+          <form id="otpForm">
+            <div class="otp">
+              <input inputmode="numeric" maxlength="1" aria-label="الرقم 1" autocomplete="one-time-code">
+              <input inputmode="numeric" maxlength="1" aria-label="الرقم 2">
+              <input inputmode="numeric" maxlength="1" aria-label="الرقم 3">
+              <input inputmode="numeric" maxlength="1" aria-label="الرقم 4">
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">تأكيد الدخول</button>
+          </form>
+          <p class="auth-hint">نسخة تجريبية: أدخل أي 4 أرقام · <button type="button" id="changePhone">تغيير الرقم</button></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/store.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
