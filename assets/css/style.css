@@ -186,11 +186,12 @@ html:not(.is-intro) .intro { display: none; }
 .cart-count.bump { animation: bump .5s var(--ease-back); }
 @keyframes bump { 40% { transform: scale(1.5); } }
 .menu-toggle { display: none; }
-.menu-toggle span { display: block; width: 22px; height: 2px; background: currentColor; border-radius: 2px; transition: transform .4s var(--ease), opacity .3s; }
-.menu-toggle span + span { margin-top: 5px; }
-.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle span { position: absolute; left: 50%; top: 21px; width: 22px; height: 2px; margin-left: -11px; background: currentColor; border-radius: 2px; transition: transform .4s var(--ease), opacity .3s; }
+.menu-toggle span:nth-child(1) { transform: translateY(-7px); }
+.menu-toggle span:nth-child(3) { transform: translateY(7px); }
+.menu-open .menu-toggle span:nth-child(1) { transform: rotate(45deg); }
 .menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
-.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-open .menu-toggle span:nth-child(3) { transform: rotate(-45deg); }
 
 .mobile-nav {
   position: fixed; inset: 0; z-index: 99; background: var(--navy-900); color: #fff;
@@ -199,8 +200,12 @@ html:not(.is-intro) .intro { display: none; }
   background-image: radial-gradient(600px 400px at 80% 20%, rgba(243,146,55,.18), transparent 70%);
 }
 .menu-open .mobile-nav { clip-path: circle(150% at 92% 40px); }
-.mobile-nav a { font-family: var(--font-h); font-size: 34px; font-weight: 700; padding: 8px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.08); opacity: 0; transform: translateY(24px); transition: .6s var(--ease); }
-.mobile-nav a small { font-family: var(--font-b); font-size: 13px; color: var(--amber); font-weight: 500; }
+.mobile-nav a { font-family: var(--font-h); font-size: 21px; font-weight: 600; padding: 12px 0; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255,255,255,.08); opacity: 0; transform: translateY(24px); transition: .6s var(--ease); }
+.mobile-nav .mn-ico { flex: none; width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: rgba(243,146,55,.12); color: var(--amber); transition: background .3s, color .3s; }
+.mobile-nav .mn-ico svg { width: 21px; height: 21px; }
+.mobile-nav a.is-active { color: var(--amber); }
+.mobile-nav a.is-active .mn-ico, .mobile-nav a:active .mn-ico { background: var(--orange); color: #fff; }
+.mobile-nav .btn { font-size: 16px; }
 .menu-open .mobile-nav a { opacity: 1; transform: none; transition-delay: calc(var(--i) * 70ms + 250ms); }
 .mobile-nav .btn { margin-top: 30px; }
 .menu-open .site-header { color: #fff; background: transparent; box-shadow: none; backdrop-filter: none; --wing-a: #B4C6EE; }
@@ -658,7 +663,12 @@ a.contact-card:hover { transform: translateX(-6px); box-shadow: var(--shadow-sof
    ========================================================= */
 .site-footer { position: relative; background: var(--navy-950); color: #C3CDE4; padding: 90px 0 30px; margin-top: 40px; overflow: hidden; }
 .site-footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(243,146,55,.6), transparent); }
-.footer-big { font-family: var(--font-script); font-size: clamp(60px, 13vw, 190px); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.1); text-align: center; white-space: nowrap; margin-bottom: 50px; user-select: none; }
+.footer-big {
+  font-family: var(--font-script); font-size: clamp(60px, 13vw, 190px); line-height: 1.15; text-align: center; white-space: nowrap; margin-bottom: 50px; user-select: none;
+  background: linear-gradient(180deg, rgba(247,178,103,.75) 0%, rgba(243,146,55,.4) 55%, rgba(243,146,55,.06) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  -webkit-text-stroke: 1px rgba(247,178,103,.25);
+}
 .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 40px; }
 .footer-grid h4 { color: #fff; font-size: 16px; margin-bottom: 18px; }
 .footer-grid ul { display: grid; gap: 10px; font-size: 15px; }

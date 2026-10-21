@@ -73,11 +73,11 @@
 
   /* ---------- Header ---------- */
   const NAV_LINKS = [
-    { href: 'index.html', label: 'الرئيسية', page: 'home', hint: 'Home' },
-    { href: 'packages.html', label: 'الباقات والرحلات', page: 'packages', hint: 'Packages' },
-    { href: 'about.html', label: 'من نحن', page: 'about', hint: 'About' },
-    { href: 'guarantee.html', label: 'الضمان', page: 'guarantee', hint: 'Guarantee' },
-    { href: 'contact.html', label: 'تواصل معنا', page: 'contact', hint: 'Contact' },
+    { href: 'index.html', label: 'الرئيسية', page: 'home', icon: 'home' },
+    { href: 'packages.html', label: 'الباقات والرحلات', page: 'packages', icon: 'suitcase' },
+    { href: 'about.html', label: 'من نحن', page: 'about', icon: 'users' },
+    { href: 'guarantee.html', label: 'الضمان', page: 'guarantee', icon: 'shield' },
+    { href: 'contact.html', label: 'تواصل معنا', page: 'contact', icon: 'phone' },
   ];
   const accountHref = () => (user.get() ? 'account.html' : 'login.html');
 
@@ -100,8 +100,8 @@
       </div>
     </header>
     <nav class="mobile-nav" id="mobileNav" aria-label="قائمة الجوال">
-      ${NAV_LINKS.map((link, index) => `<a href="${link.href}" style="--i:${index}">${link.label}<small>${link.hint}</small></a>`).join('')}
-      <a href="${accountHref()}" style="--i:${NAV_LINKS.length}">حسابي<small>Account</small></a>
+      ${NAV_LINKS.map((link, index) => `<a href="${link.href}" class="${link.page === currentPage ? 'is-active' : ''}" style="--i:${index}"><span class="mn-ico">${ICONS[link.icon]}</span>${link.label}</a>`).join('')}
+      <a href="${accountHref()}" class="${currentPage === 'account' ? 'is-active' : ''}" style="--i:${NAV_LINKS.length}"><span class="mn-ico">${ICONS.user}</span>حسابي</a>
       <span class="btn btn-wa btn-lg" style="--i:7" data-wa="السلام عليكم، أرغب بحجز رحلة مع سهل السفر ✈️">${ICONS.whatsapp} احجز عبر واتساب</span>
     </nav>`;
 
