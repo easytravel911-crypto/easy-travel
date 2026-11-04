@@ -1,0 +1,122 @@
+{#
+| Variable         | Type       | Description                                                         |
+|------------------|------------|---------------------------------------------------------------------|
+| page             | object     |                                                                     |
+| page.title       | string     | *could be html                                                      |
+| page.slug        | string     | ex: "cat.show"                                                      |
+#}
+{% extends "layouts.master" %}
+{% block content %}
+	<div class="et-home">
+		{# Decorative brand film: always playing, muted, with its first frame as poster. #}
+		<section class="et-hero-video" aria-hidden="true">
+			<video autoplay muted loop playsinline preload="auto" disablepictureinpicture poster="{{ 'images/hero-poster.jpg'|asset }}">
+				<source src="{{ theme.settings.get('et_hero_video_url') ?: 'videos/hero.mp4'|asset }}" type="video/mp4">
+			</video>
+		</section>
+
+		<section class="et-hero" aria-labelledby="et-hero-title">
+			<div class="container et-hero__inner">
+				<span class="et-eyebrow">رحلة بلا عناء <span aria-hidden="true">✦</span> Effortless Journey</span>
+				<h2 id="et-hero-title">رحلتك القادمة <em>تبدأ من هنا</em></h2>
+				<p>اختر وجهتك، ودعنا نرتب لك رحلة متكاملة من الطيران والإقامة إلى أجمل التجارب.</p>
+				<div class="et-hero__actions">
+					<a class="et-button et-button--primary" href="#travel-packages">اكتشف الرحلات <span aria-hidden="true">←</span></a>
+					<a class="et-button et-button--whatsapp" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i> احجز عبر واتساب</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="et-promise" aria-label="خدمات سهل السفر">
+			<div class="container et-promise__inner">
+				<p><span aria-hidden="true">✈</span> تفاصيل رحلتك في مكان واحد</p>
+				<p><span aria-hidden="true">◇</span> برامج تناسب وقتك وميزانيتك</p>
+				<p><span aria-hidden="true">↗</span> فريق يرافقك قبل السفر وأثناءه</p>
+			</div>
+		</section>
+
+		{% component home %}
+
+		<section class="et-section et-destinations" aria-labelledby="et-destinations-title">
+			<div class="container">
+				<div class="et-section__heading">
+					<div>
+						<span class="et-kicker">وجهات تنتظرك</span>
+						<h2 id="et-destinations-title">إلى أين تأخذك <em>أحلامك؟</em></h2>
+					</div>
+					<a class="et-text-link" href="#travel-packages">تصفّح رحلات المتجر <span aria-hidden="true">←</span></a>
+				</div>
+				<div class="et-destinations__grid">
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">إسطنبول</span><span class="et-destination__hint">بين التاريخ والحياة</span>
+					</a>
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">المالديف</span><span class="et-destination__hint">لحظات على مهل</span>
+					</a>
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">كابادوكيا</span><span class="et-destination__hint">سماء لا تشبه غيرها</span>
+					</a>
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">سويسرا</span><span class="et-destination__hint">طبيعة تفتح النفس</span>
+					</a>
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">بالي</span><span class="et-destination__hint">استرخاء بطابع استوائي</span>
+					</a>
+					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=75')">
+						<span class="et-destination__name">دبي</span><span class="et-destination__hint">مدينة لا تهدأ</span>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="et-section et-packages" id="travel-packages" aria-labelledby="et-packages-title">
+			<div class="container">
+				<div class="et-section__heading">
+					<div>
+						<span class="et-kicker">باقات ورحلات</span>
+						<h2 id="et-packages-title">اختر رحلتك <em>القادمة</em></h2>
+						<p class="et-section__intro">تتغير الأسعار حسب الموعد والموسم، لذلك نحددها معك عند الحجز عبر واتساب.</p>
+					</div>
+				</div>
+				<salla-products-list data-testid="easy-travel-products" source="latest"></salla-products-list>
+			</div>
+		</section>
+
+		<section class="et-section et-steps" id="travel-how-it-works" aria-labelledby="et-steps-title">
+			<div class="container">
+				<div class="et-section__heading">
+					<div>
+						<span class="et-kicker">كيف نعمل</span>
+						<h2 id="et-steps-title">من الفكرة إلى <em>الإقلاع</em></h2>
+					</div>
+				</div>
+				<div class="et-steps__grid">
+					<article class="et-step"><span class="et-step__number">01</span><h3>اختر وجهتك</h3><p>استكشف الرحلات المتاحة أو شاركنا الوجهة التي تحلم بها.</p></article>
+					<article class="et-step"><span class="et-step__number">02</span><h3>نرتب التفاصيل</h3><p>نساعدك على تنسيق برنامج يناسب وقتك واهتماماتك.</p></article>
+					<article class="et-step"><span class="et-step__number">03</span><h3>احجز عبر واتساب</h3><p>نتفق معك على التفاصيل والسعر، ثم يصلك رابط دفع آمن في رسالة نصية.</p></article>
+					<article class="et-step"><span class="et-step__number">04</span><h3>استمتع برحلتك</h3><p>انطلق لرحلتك واحتفظ بتفاصيل حجزك في حسابك بالمتجر.</p></article>
+				</div>
+			</div>
+		</section>
+
+		<section class="et-contact" id="travel-contact" aria-labelledby="et-contact-title">
+			<div class="container et-contact__inner">
+				<div>
+					<span class="et-kicker">جاهز للإقلاع؟</span>
+					<h2 id="et-contact-title">رحلتك القادمة<br>تبدأ <em>برسالة</em></h2>
+					<p>راسلنا عبر واتساب أو تواصل معنا هاتفيًا أو بالبريد، وسنساعدك في التخطيط.</p>
+				</div>
+				<div class="et-contact__channels">
+					{% set et_phone = theme.settings.get('et_phone', '0509890653') %}
+					{% set et_email = theme.settings.get('et_email', 'Support@easytraveel.com') %}
+					<a data-testid="easy-travel-whatsapp" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
+					<a href="tel:{{ et_phone }}"><i class="sicon-phone" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
+					<a href="mailto:{{ et_email }}"><i class="sicon-mail" aria-hidden="true"></i><span dir="ltr">{{ et_email }}</span></a>
+				</div>
+			</div>
+		</section>
+	</div>
+{% endblock %}
+{% block scripts %}
+    <script defer src="{{ 'home.js' | asset }}"></script>
+{% endblock %}
