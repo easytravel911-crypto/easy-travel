@@ -4,10 +4,5 @@
 | products        | Products[] |                                |
 | position        | Int        | Sorting number start from zero |
 #}
-<section component-id="{{ componentId }}" data-testid="store-home-products-section" class="s-block s-block--latest-products container mt-6 sm:mt-8">
-    <div class="s-block__title">
-      <h2>{{ trans('blocks.home.latest_products') }}</h2>
-    </div>
-    
-    <salla-products-list data-testid="store-home-latest-products-list" source="latest"></salla-products-list>
-</section> 
+{# The home page already lists the latest trips in its own "packages" section, so this block stays empty to avoid showing them twice. #}
+<section component-id="{{ componentId }}" data-testid="store-home-products-section" class="s-block s-block--latest-products" hidden></section>

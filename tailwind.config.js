@@ -18,8 +18,12 @@ module.exports = {
                 'var(--font-main)',
                 '-apple-system',
                 'BlinkMacSystemFont',
+                'Segoe UI',
+                'Tahoma',
+                'Arial',
+                'sans-serif',
             ],
-            primary: "var(--font-main)"
+            primary: ["var(--font-main)", 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
         },
         extend    : {
             transitionTimingFunction: {
