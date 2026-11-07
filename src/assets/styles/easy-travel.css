@@ -662,6 +662,25 @@ body:has(.et-home) .store-footer {
     padding-bottom: 40px;
   }
 
+  /* Comfortable tap targets (about 44px) for the menu toggle and contact links on phones. */
+  .mburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .et-footer-contacts a,
+  .et-contact__channels a,
+  .et-text-link {
+    min-height: 44px;
+  }
+
+  .et-footer-contacts ul {
+    gap: 0;
+  }
+
   .et-hero p {
     font-size: 15px;
   }
@@ -739,6 +758,11 @@ body:has(.et-home) .store-footer {
 @media (max-width: 640px) {
   .product-single #main-content {
     padding-bottom: 76px;
+  }
+
+  /* The fixed button would otherwise cover the last footer line (commercial registration). */
+  .product-single .store-footer {
+    padding-bottom: 84px;
   }
 
   .et-booking .et-whatsapp-button {
