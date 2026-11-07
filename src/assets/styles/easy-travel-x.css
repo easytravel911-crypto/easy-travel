@@ -653,3 +653,8 @@ html.is-loading { overflow: hidden; }
 .etx-w { line-height: inherit; }
 /* Tailwind's lg:hidden loses to the icon-button display rule, so the menu toggle is hidden explicitly on desktop. */
 @media (min-width: 1024px) { .etx-header .mburger { display: none; } }
+/* Salla's copyright line inherits a dark grey; on navy it needs the light footer colour. */
+.etx-footer-bottom .copyright-text, .etx-footer-bottom .copyright-text * { color: #8794B3 !important; }
+.etx-footer-bottom .copyright-text a:hover { color: var(--amber) !important; }
+/* Room under the last footer line so the floating buttons never cover it on phones. */
+@media (max-width: 760px) { .etx-site-footer { padding-bottom: 96px; } }
