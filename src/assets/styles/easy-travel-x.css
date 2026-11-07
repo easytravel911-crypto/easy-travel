@@ -23,8 +23,8 @@
   --radius: 24px;
   --ease: cubic-bezier(.2, .8, .2, 1);
   --ease-back: cubic-bezier(.34, 1.56, .64, 1);
-  --font-h: "Alexandria", system-ui, sans-serif;
-  --font-b: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-h: var(--font-main), system-ui, sans-serif;
+  --font-b: var(--font-main), system-ui, sans-serif;
   --font-script: "Aref Ruqaa", serif;
   --shadow-soft: 0 24px 60px -32px rgba(13, 22, 48, .35);
 }
@@ -538,7 +538,7 @@ html:not(.is-intro) .etx-intro { display: none; }
    footer, floating buttons and small fixes for store data.
    ========================================================= */
 :root {
-  --font-h: "Alexandria", var(--font-main), system-ui, sans-serif;
+  --font-h: var(--font-main), system-ui, sans-serif;
   --font-b: var(--font-main), system-ui, sans-serif;
 }
 .etx-scope h2, .etx-scope h3, .etx-site-footer h4, .etx-pass-route b, .etx-pl-name { font-family: var(--font-h); }
@@ -658,3 +658,83 @@ html.is-loading { overflow: hidden; }
 .etx-footer-bottom .copyright-text a:hover { color: var(--amber) !important; }
 /* Room under the last footer line so the floating buttons never cover it on phones. */
 @media (max-width: 760px) { .etx-site-footer { padding-bottom: 96px; } }
+
+/* ---------- Marquee, rebuilt for the store ----------
+   Each strip clips its own text and is wider than the screen, so the rotated edges never show.
+   Items carry their own spacing, so the loop seam looks like every other gap. */
+.etx-marquee-wrap { position: relative; isolation: isolate; overflow: hidden; padding: 56px 0 34px; }
+.etx-marquee { overflow: hidden; width: calc(100% + 160px); margin-inline: -80px; padding: 16px 0; transform-origin: center; }
+.etx-marquee--navy { position: relative; z-index: 2; background: var(--navy); color: #fff; transform: rotate(-2deg); box-shadow: 0 20px 40px -24px rgba(13,22,48,.6); }
+.etx-marquee + .etx-marquee.etx-marquee--orange { position: relative; z-index: 1; margin-top: -6px; background: var(--orange); color: #fff; opacity: 1; transform: rotate(1.2deg); }
+.etx-marquee-track { display: flex; gap: 0; width: max-content; animation: etx-marquee 40s linear infinite; font-family: var(--font-h); font-weight: 600; font-size: clamp(17px, 2.2vw, 24px); line-height: 1.5; white-space: nowrap; }
+.etx-marquee--orange .etx-marquee-track { animation-direction: reverse; animation-duration: 50s; }
+.etx-mq-group { display: inline-flex; flex: none; align-items: center; gap: 28px; padding-inline-end: 28px; }
+.etx-mq-group b { font-weight: 600; }
+.etx-mq-group i { font-style: normal; font-size: .8em; color: var(--amber); }
+.etx-marquee--orange .etx-mq-group i { color: var(--navy); }
+@media (max-width: 760px) {
+  .etx-marquee-wrap { padding: 40px 0 24px; }
+  .etx-marquee { padding: 12px 0; }
+  .etx-mq-group { gap: 20px; padding-inline-end: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .etx-marquee-track { animation: none; } }
+
+/* ---------- Full-screen menu, every screen size ----------
+   Opens as a circle from the menu button (design's mobile menu), links come from the Salla header menu. */
+.etx-header .etx-menu-toggle { display: grid; position: relative; width: 44px; height: 44px; color: var(--navy); }
+.etx-header .etx-menu-toggle span { top: 21px; }
+.etx-mobile-nav {
+  z-index: 99; display: block; overflow-y: auto; overscroll-behavior: contain;
+  padding: 110px 0 40px; justify-content: flex-start;
+  clip-path: circle(0 at calc(100% - 44px) 44px); visibility: hidden;
+  transition: clip-path .8s cubic-bezier(.77,0,.18,1), visibility 0s linear .8s;
+}
+[dir="ltr"] .etx-mobile-nav { clip-path: circle(0 at 44px 44px); }
+.menu-open .etx-mobile-nav { clip-path: circle(150% at calc(100% - 44px) 44px); visibility: visible; transition: clip-path .8s cubic-bezier(.77,0,.18,1), visibility 0s; }
+[dir="ltr"] .menu-open .etx-mobile-nav { clip-path: circle(150% at 44px 44px); }
+.etx-menu-grid { width: min(1100px, 100% - 40px); margin-inline: auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: start; }
+.etx-menu-kicker { display: block; font-family: var(--font-h); font-size: 13px; letter-spacing: 1px; color: var(--amber); margin-bottom: 10px; opacity: .85; }
+.etx-menu-list, .etx-menu-list ul { margin: 0; padding: 0; list-style: none; }
+.etx-menu-list > li, .etx-menu-account { opacity: 0; transform: translateY(24px); transition: .6s var(--ease); }
+.menu-open .etx-menu-list > li, .menu-open .etx-menu-account { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 60ms + 250ms); }
+.etx-mobile-nav .etx-menu-list a, .etx-mobile-nav summary, .etx-menu-account-btn {
+  display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 0; color: #fff;
+  font-family: var(--font-h); font-size: clamp(19px, 2.2vw, 24px); font-weight: 600; line-height: 1.4;
+  border-bottom: 1px solid rgba(255,255,255,.08); opacity: 1; transform: none; background: none; cursor: pointer; text-align: start;
+}
+.etx-mobile-nav .etx-menu-list a:hover, .etx-mobile-nav summary:hover, .etx-menu-account-btn:hover { color: var(--amber); }
+.etx-mobile-nav .etx-mn-ico i { font-size: 20px; }
+.etx-mn-group summary { list-style: none; }
+.etx-mn-group summary::-webkit-details-marker { display: none; }
+.etx-mn-caret { margin-inline-start: auto; font-size: 22px; color: var(--amber); transition: transform .35s var(--ease); }
+.etx-mn-group[open] .etx-mn-caret { transform: rotate(180deg); }
+.etx-mobile-nav .etx-mn-group ul { padding: 6px 56px 10px 0; display: grid; gap: 2px; }
+[dir="ltr"] .etx-mobile-nav .etx-mn-group ul { padding: 6px 0 10px 56px; }
+.etx-mobile-nav .etx-mn-group ul a { font-size: 16px; font-weight: 500; padding: 8px 0; border: 0; color: #C3CDE4; }
+.etx-menu-account { margin-top: 6px; }
+.etx-menu-aside {
+  position: sticky; top: 0; padding: 34px; border-radius: 28px; color: #C3CDE4;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  opacity: 0; transform: translateY(30px); transition: .7s var(--ease);
+}
+.menu-open .etx-menu-aside { opacity: 1; transform: none; transition-delay: .45s; }
+.etx-menu-script { display: block; font-family: var(--font-script); font-size: clamp(34px, 4vw, 52px); line-height: 1.4; color: var(--amber); margin-bottom: 10px; }
+.etx-menu-aside p { margin: 0 0 24px; font-size: 16px; line-height: 1.8; }
+.etx-menu-aside .etx-btn { width: 100%; }
+.etx-menu-phone { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; color: #fff; font-size: 15px; min-height: 44px; }
+.etx-menu-phone:hover { color: var(--amber); }
+/* While the menu is open the header turns transparent over the navy layer. */
+.menu-open .etx-header { background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; transform: none; }
+.menu-open .etx-header .etx-icon-btn, .menu-open .etx-header .etx-menu-toggle { color: #fff; }
+.menu-open .etx-header .etx-nav, .menu-open .etx-header .etx-header-cta, .menu-open .etx-header salla-user-menu, .menu-open .etx-header salla-localization-modal { visibility: hidden; }
+@media (max-width: 900px) {
+  .etx-menu-grid { grid-template-columns: 1fr; gap: 30px; }
+  .etx-menu-aside { position: static; padding: 24px; }
+}
+@media (max-width: 767px) { .etx-mobile-nav { padding-top: 90px; } }
+/* The design's generic menu-link style must not reach the button and phone link in the side box. */
+.etx-mobile-nav .etx-menu-aside .etx-btn { display: inline-flex; justify-content: center; margin-top: 0; padding: 18px 34px; border: 0; font-size: 17px; opacity: 1; transform: none; }
+.etx-mobile-nav .etx-menu-aside .etx-menu-phone { padding: 0; border: 0; font-family: inherit; font-size: 15px; font-weight: 500; opacity: 1; transform: none; }
+/* The logo keeps its own colours, so on the navy menu it sits on a small white plate. */
+.etx-brand img { transition: height .4s var(--ease), background .3s, padding .3s; border-radius: 14px; }
+.menu-open .etx-header .etx-brand img { background: #fff; padding: 4px 8px; }

@@ -407,8 +407,12 @@ class Home extends BasePage {
   renderMarquee(trips) {
     const track = document.getElementById('etxMarqueeTrips');
     if (!track || trips.length < 3) return;
-    const line = trips.map((trip) => escapeHtml(String(trip.name).split(/\s+/)[0])).join(' ✈ ') + ' ✈';
-    track.innerHTML = `<span>${line}</span><span>${line}</span>`;
+    const names = [...new Set(trips.map((trip) => String(trip.name).split(/\s+/)[0]))];
+    // Each group must be wider than the screen, otherwise an empty stretch shows before the loop.
+    let items = names;
+    while (items.length < 16) items = items.concat(names);
+    const group = `<span class="etx-mq-group">${items.map((name) => `<b>${escapeHtml(name)}</b><i aria-hidden="true">✈</i>`).join('')}</span>`;
+    track.innerHTML = group + group;
   }
 
   renderMosaic(products) {

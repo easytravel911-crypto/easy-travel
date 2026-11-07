@@ -21,8 +21,7 @@
         "component-store-features",
         "component-youtube",
         "menu-images",
-        "filters",
-        "color"
+        "filters"
     ],
     "settings": [
         {
@@ -116,7 +115,7 @@
             "label": "رابط فيديو أعلى الصفحة (اختياري)",
             "description": "اتركه فارغًا لاستخدام فيديو الثيم. يجب أن يكون الرابط لملف MP4.",
             "value": null,
-            "icon": "sicon-video",
+            "icon": "sicon-film",
             "required": false,
             "multilanguage": false
         },
@@ -163,7 +162,7 @@
             "label": "الرقم 1",
             "description": "مثال: +500",
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -174,7 +173,7 @@
             "label": "وصف الرقم 1",
             "description": "مثال: مسافر سعيد",
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -185,7 +184,7 @@
             "label": "الرقم 2",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -196,7 +195,7 @@
             "label": "وصف الرقم 2",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -207,7 +206,7 @@
             "label": "الرقم 3",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -218,7 +217,7 @@
             "label": "وصف الرقم 3",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -229,7 +228,7 @@
             "label": "الرقم 4",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
@@ -240,7 +239,7 @@
             "label": "وصف الرقم 4",
             "description": null,
             "value": "",
-            "icon": "sicon-chart",
+            "icon": "sicon-graph-bar",
             "required": false,
             "multilanguage": false
         },
