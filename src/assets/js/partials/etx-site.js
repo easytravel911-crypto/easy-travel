@@ -21,7 +21,7 @@ function init() {
     const y = window.scrollY;
     const max = document.documentElement.scrollHeight - window.innerHeight;
     if (header) {
-      const menuOpen = document.body.classList.contains('menu-open');
+      const menuOpen = document.body.classList.contains('etx-menu-open');
       header.classList.toggle('is-scrolled', y > 40);
       if (y > 500 && y > lastScroll + 4 && !menuOpen) header.classList.add('is-hidden');
       if (y < lastScroll - 4 || y <= 500) header.classList.remove('is-hidden');
@@ -60,15 +60,15 @@ function initMenu(header) {
   const body = document.body;
 
   const setOpen = (open) => {
-    body.classList.toggle('menu-open', open);
+    body.classList.toggle('etx-menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-hidden', String(!open));
     document.documentElement.style.overflow = open ? 'hidden' : '';
     if (window.etxLenis) open ? window.etxLenis.stop() : window.etxLenis.start();
     if (open) header?.classList.remove('is-hidden');
   };
-  toggle.addEventListener('click', () => setOpen(!body.classList.contains('menu-open')));
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && body.classList.contains('menu-open')) setOpen(false); });
+  toggle.addEventListener('click', () => setOpen(!body.classList.contains('etx-menu-open')));
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && body.classList.contains('etx-menu-open')) setOpen(false); });
   menu.addEventListener('click', (event) => { if (event.target.closest('a[href]')) setOpen(false); });
 
   document.getElementById('etxMenuAccount')?.addEventListener('click', () => {
