@@ -4,7 +4,7 @@
         "en": "Easy Travel"
     },
     "repository": "https://github.com/easytravel911-crypto/easy-travel",
-    "author_email": "Support@easytraveel.com",
+    "author_email": "Easytravel.911@gmail.com",
     "features": [
         "mega-menu",
         "fonts",
@@ -59,7 +59,7 @@
             "id": "et_email",
             "label": "البريد الإلكتروني",
             "description": null,
-            "value": "Support@easytraveel.com",
+            "value": "Easytravel.911@gmail.com",
             "icon": "sicon-mail",
             "required": false,
             "multilanguage": false

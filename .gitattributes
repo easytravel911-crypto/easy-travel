@@ -1,0 +1,13 @@
+# Keep LF line endings in the repo and working tree on every OS,
+# so Windows checkouts do not show untouched files as modified.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.mp4  binary
+*.woff binary
+*.woff2 binary

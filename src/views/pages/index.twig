@@ -108,7 +108,7 @@
 				</div>
 				<div class="et-contact__channels">
 					{% set et_phone = theme.settings.get('et_phone', '0509890653') %}
-					{% set et_email = theme.settings.get('et_email', 'Support@easytraveel.com') %}
+					{% set et_email = theme.settings.get('et_email', 'Easytravel.911@gmail.com') %}
 					<a data-testid="easy-travel-whatsapp" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
 					<a href="tel:{{ et_phone }}"><i class="sicon-phone" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
 					<a href="mailto:{{ et_email }}"><i class="sicon-mail" aria-hidden="true"></i><span dir="ltr">{{ et_email }}</span></a>
