@@ -47,7 +47,7 @@
 {# Full-screen menu for every screen size. Links come from the store's header menu in Salla (etx-site.js). #}
 {% set et_whatsapp = theme.settings.get('et_whatsapp', '966509890653') %}
 {% set et_phone = theme.settings.get('et_phone', '0509890653') %}
-<nav class="etx-mobile-nav" id="etxMenu" aria-label="{{ trans('blocks.header.main_menu') }}" aria-hidden="true">
+<nav class="etx-mobile-nav" id="etxMenu" data-lenis-prevent aria-label="{{ trans('blocks.header.main_menu') }}" aria-hidden="true">
   <div class="etx-menu-grid">
     <div class="etx-menu-links">
       <span class="etx-menu-kicker">القائمة</span>

@@ -738,3 +738,6 @@ html.is-loading { overflow: hidden; }
 /* The logo keeps its own colours, so on the navy menu it sits on a small white plate. */
 .etx-brand img { transition: height .4s var(--ease), background .3s, padding .3s; border-radius: 14px; }
 .menu-open .etx-header .etx-brand img { background: #fff; padding: 4px 8px; }
+/* Gentler angles and a little more space, so the navy strip never covers the orange strip's text at the screen edges. */
+.etx-marquee--navy { transform: rotate(-1deg); }
+.etx-marquee + .etx-marquee.etx-marquee--orange { margin-top: 18px; transform: rotate(.6deg); }
