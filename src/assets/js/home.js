@@ -284,7 +284,8 @@ class Home extends BasePage {
     const grid = document.getElementById('etxPassGrid');
     if (!grid) return;
     if (!packages.length) { grid.closest('section').hidden = true; return; }
-    const featuredIndex = packages.length === 3 ? 1 : -1;
+    // Three passes: the middle one is featured. A single pass is featured and centred.
+    const featuredIndex = packages.length === 3 ? 1 : (packages.length === 1 ? 0 : -1);
     const gates = ['A1', 'B7', 'VIP'];
     const seats = ['14C', '3A', '1A'];
     grid.innerHTML = packages.map((product, index) => {
