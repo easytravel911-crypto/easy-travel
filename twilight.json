@@ -21,7 +21,8 @@
         "component-store-features",
         "component-youtube",
         "menu-images",
-        "filters"
+        "filters",
+        "color"
     ],
     "settings": [
         {
