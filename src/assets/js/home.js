@@ -254,7 +254,8 @@ class Home extends BasePage {
     let products = [];
     try {
       const response = await salla.api.product.fetch({ source: 'latest', limit: 30 });
-      products = (response && response.data) || [];
+      // The API lists newest first; the store's own order (oldest first) reads better.
+      products = ((response && response.data) || []).slice().reverse();
     } catch (error) {
       app.log('Easy Travel: products could not be loaded', error);
     }
@@ -264,7 +265,7 @@ class Home extends BasePage {
 
     this.renderPasses(packages);
     this.renderDestinations(trips);
-    this.renderPlannerOptions(trips.length ? trips : products);
+    this.renderPlannerOptions(products);
     this.renderMarquee(trips);
     this.renderMosaic(trips.length ? trips : products);
     this.observeReveal(document);

@@ -7,6 +7,13 @@ function init() {
   const header = document.getElementById('etxHeader');
   const toTop = document.getElementById('etxToTop');
   const ring = document.getElementById('etxToTopRing');
+  const space = document.querySelector('.etx-header-space');
+  // The spacer matches the real header height so breadcrumbs never sit under the fixed bar.
+  const fitSpace = () => { if (header && space) space.style.height = `${header.offsetHeight}px`; };
+  fitSpace();
+  window.addEventListener('load', fitSpace);
+  window.addEventListener('resize', fitSpace);
+  if (header && window.ResizeObserver) new ResizeObserver(() => { if (!header.classList.contains('is-scrolled')) fitSpace(); }).observe(header);
   let lastScroll = 0;
   let ticking = false;
 
