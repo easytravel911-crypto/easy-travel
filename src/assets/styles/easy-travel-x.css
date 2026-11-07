@@ -25,7 +25,7 @@
   --ease-back: cubic-bezier(.34, 1.56, .64, 1);
   --font-h: var(--font-main), system-ui, sans-serif;
   --font-b: var(--font-main), system-ui, sans-serif;
-  --font-script: var(--font-main), system-ui, sans-serif;
+  --font-script: "Aref Ruqaa", serif;
   --shadow-soft: 0 24px 60px -32px rgba(13, 22, 48, .35);
 }
 
@@ -741,7 +741,3 @@ html.is-loading { overflow: hidden; }
 /* Gentler angles and a little more space, so the navy strip never covers the orange strip's text at the screen edges. */
 .etx-marquee--navy { transform: rotate(-1deg); }
 .etx-marquee + .etx-marquee.etx-marquee--orange { margin-top: 18px; transform: rotate(.6deg); }
-/* One font everywhere: the store font chosen in Salla. Decorative phrases stand out by weight and colour only. */
-.etx-script, .etx-intro-text, .etx-footer-big, .etx-menu-script { font-weight: 800; letter-spacing: 0; }
-.etx-footer-big { font-size: clamp(48px, 10vw, 150px); }
-.etx-intro-text { font-size: clamp(40px, 7vw, 104px); }
