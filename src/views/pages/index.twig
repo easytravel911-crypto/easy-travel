@@ -6,9 +6,58 @@
 | page.slug        | string     | ex: "cat.show"                                                      |
 #}
 {% extends "layouts.master" %}
+{% set et_whatsapp = theme.settings.get('et_whatsapp', '966509890653') %}
 {% block content %}
-	<div class="et-home">
-		{# Decorative brand film: always playing, muted, with its first frame as poster. #}
+	{# Preloader: home page only. Inline so it paints before any other file loads. #}
+	<div class="etx-preloader" id="etxPreloader" role="status" aria-label="جارٍ التحميل">
+		<div class="etx-pl-inner">
+			<div class="etx-pl-orbit">
+				<div class="etx-pl-plane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
+				<img class="etx-pl-logo" src="{{ 'images/logo.png'|asset }}" alt="">
+			</div>
+			<div class="etx-pl-name">سهل السفر<small>EASY TRAVEL</small></div>
+			<div class="etx-pl-bar"><i id="etxPreloaderBar"></i></div>
+			<div class="etx-pl-pct" id="etxPreloaderPercent">0%</div>
+		</div>
+	</div>
+	<script>
+		(function () {
+			var root = document.documentElement;
+			var preloader = document.getElementById('etxPreloader');
+			var bar = document.getElementById('etxPreloaderBar');
+			var percent = document.getElementById('etxPreloaderPercent');
+			var MIN_VISIBLE_MS = 1300;
+			var startedAt = Date.now();
+			var progress = 0, pageLoaded = false, finished = false;
+			root.classList.add('is-loading');
+			var setProgress = function (value) {
+				progress = Math.min(100, value);
+				bar.style.width = progress + '%';
+				percent.textContent = Math.round(progress) + '%';
+			};
+			var finish = function () {
+				if (finished) return;
+				finished = true;
+				preloader.classList.add('done');
+				root.classList.remove('is-loading');
+				document.dispatchEvent(new Event('preloader:done'));
+				setTimeout(function () { preloader.remove(); }, 1100);
+			};
+			// Ease toward 90% while loading, then run to 100% once the page has loaded.
+			var timer = setInterval(function () {
+				if (!pageLoaded) { setProgress(progress + (90 - progress) * 0.05); return; }
+				setProgress(progress + 6);
+				if (progress >= 100 && Date.now() - startedAt >= MIN_VISIBLE_MS) { clearInterval(timer); setTimeout(finish, 150); }
+			}, 50);
+			window.addEventListener('load', function () { pageLoaded = true; });
+			setTimeout(function () { pageLoaded = true; }, 8000); // never block the site on a slow file
+		})();
+	</script>
+	{# Cinematic intro: first arrival from outside the site only (see the head script in the master layout). #}
+	<div class="etx-intro" id="etxIntro" aria-hidden="true" data-logo="{{ 'images/logo.png'|asset }}"></div>
+
+	<div class="et-home etx-scope">
+		{# ===== HERO: kept exactly as before ===== #}
 		<section class="et-hero-video" aria-hidden="true">
 			<video autoplay muted loop playsinline preload="auto" disablepictureinpicture poster="{{ 'images/hero-poster.jpg'|asset }}">
 				<source src="{{ theme.settings.get('et_hero_video_url') ?: 'videos/hero.mp4'|asset }}" type="video/mp4">
@@ -22,96 +71,171 @@
 				<p>اختر وجهتك، ودعنا نرتب لك رحلة متكاملة من الطيران والإقامة إلى أجمل التجارب.</p>
 				<div class="et-hero__actions">
 					<a class="et-button et-button--primary" href="#travel-packages">اكتشف الرحلات <span aria-hidden="true">←</span></a>
-					<a class="et-button et-button--whatsapp" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i> احجز عبر واتساب</a>
+					<a class="et-button et-button--whatsapp" data-et-booking href="https://wa.me/{{ et_whatsapp }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i> احجز عبر واتساب</a>
 				</div>
 			</div>
 		</section>
 
-		<section class="et-promise" aria-label="خدمات سهل السفر">
-			<div class="container et-promise__inner">
-				<p><span aria-hidden="true">✈</span> تفاصيل رحلتك في مكان واحد</p>
-				<p><span aria-hidden="true">◇</span> برامج تناسب وقتك وميزانيتك</p>
-				<p><span aria-hidden="true">↗</span> فريق يرافقك قبل السفر وأثناءه</p>
+		{# ===== PLANNER ===== #}
+		<section class="etx-planner" id="planner">
+			<div class="etx-container">
+				<form class="etx-planner-card" id="etxPlanner" data-reveal>
+					<div class="etx-planner-title"><b>خطط رحلتك في 30 ثانية</b><small>ونرسل لك عرضاً على واتساب</small></div>
+					<div class="etx-field"><label for="etxPlannerDestination">إلى أين؟</label><select id="etxPlannerDestination" name="destination"><option>وجهة أخرى / ساعدوني في الاختيار</option></select></div>
+					<div class="etx-field"><label for="etxPlannerMonth">متى؟</label><select id="etxPlannerMonth" name="month"><option value="">تاريخ مرن</option></select></div>
+					<div class="etx-field">
+						<label for="etxPlannerTravelers">كم مسافر؟</label>
+						<select id="etxPlannerTravelers" name="travelers">
+							<option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6 أو أكثر</option>
+						</select>
+					</div>
+					<button class="etx-btn etx-btn-primary etx-btn-lg" type="submit"><i class="sicon-whatsapp" aria-hidden="true"></i> أرسل طلبي</button>
+				</form>
 			</div>
 		</section>
 
+		{# ===== MARQUEE (filled with the store's trip names) ===== #}
+		<div class="etx-marquee-wrap" aria-hidden="true">
+			<div class="etx-marquee"><div class="etx-marquee-track" id="etxMarqueeTrips">
+				<span>إسطنبول ✈ المالديف ✈ سويسرا ✈ باريس ✈ بالي ✈ جورجيا ✈ كبادوكيا ✈ ماليزيا ✈</span>
+				<span>إسطنبول ✈ المالديف ✈ سويسرا ✈ باريس ✈ بالي ✈ جورجيا ✈ كبادوكيا ✈ ماليزيا ✈</span>
+			</div></div>
+			<div class="etx-marquee"><div class="etx-marquee-track">
+				<span>رحلة بلا عناء ✦ العالم أقرب إليك ✦ احجز رحلتك حول العالم ✦ رحلة بلا عناء ✦ العالم أقرب إليك ✦</span>
+				<span>رحلة بلا عناء ✦ العالم أقرب إليك ✦ احجز رحلتك حول العالم ✦ رحلة بلا عناء ✦ العالم أقرب إليك ✦</span>
+			</div></div>
+		</div>
+
+		{# ===== DESTINATIONS (store trips) ===== #}
+		<section class="etx-section" id="destinations" hidden>
+			<div class="etx-container etx-dest-head">
+				<div class="etx-section-head">
+					<span class="etx-kicker">وجهات تنتظرك</span>
+					<h2 data-split>أين ستكون <em>رحلتك القادمة؟</em></h2>
+					<p>اسحب واستكشف. كل وجهة برنامج جاهز يمكن تخصيصه لك بالكامل.</p>
+				</div>
+				<div class="etx-slider-nav">
+					<button type="button" id="etxDestPrev" aria-label="السابق"><i class="sicon-arrow-right" aria-hidden="true"></i></button>
+					<button type="button" id="etxDestNext" aria-label="التالي"><i class="sicon-arrow-left" aria-hidden="true"></i></button>
+				</div>
+			</div>
+			<div class="etx-dest-scroller" id="etxDestScroller"></div>
+		</section>
+
+		{# ===== PACKAGES as boarding passes (store products named «باقة ...») ===== #}
+		<section class="etx-section etx-packages" id="travel-packages">
+			<div class="etx-container">
+				<div class="etx-section-head center">
+					<span class="etx-kicker">باقاتنا</span>
+					<h2 data-split>اختر <em>بطاقة صعودك</em></h2>
+					<p>باقات تناسب كل مسافر. اختر الأنسب لك واحجز مباشرة عبر واتساب خلال دقائق.</p>
+				</div>
+				<div class="etx-pass-grid" id="etxPassGrid"></div>
+				<p class="etx-pkg-note">تتغير الأسعار حسب الموعد والموسم، لذلك نحددها معك عند الحجز عبر واتساب.</p>
+			</div>
+		</section>
+
+		{# ===== JOURNEY ===== #}
+		<section class="etx-section etx-journey" id="etxJourney">
+			<div class="etx-container">
+				<div class="etx-section-head center on-dark">
+					<span class="etx-kicker">كيف نعمل</span>
+					<h2 data-split>من الفكرة إلى <em>الإقلاع</em></h2>
+					<p>أربع خطوات بسيطة، وأنت مرتاح في كل واحدة منها.</p>
+				</div>
+				<svg class="etx-journey-svg" viewBox="0 0 1000 200" aria-hidden="true">
+					<defs>
+						<linearGradient id="journeyGrad" x1="1" y1="0" x2="0" y2="0">
+							<stop offset="0" stop-color="#F7B267"/><stop offset="1" stop-color="#F39237"/>
+						</linearGradient>
+					</defs>
+					<path class="etx-journey-base" d="M1000 120 C 930 120 900 40 820 50 S 700 170 620 150 S 480 40 400 60 S 260 180 180 140 S 60 90 0 100"/>
+					<path id="etxJourneyLine" class="etx-journey-line" d="M1000 120 C 930 120 900 40 820 50 S 700 170 620 150 S 480 40 400 60 S 260 180 180 140 S 60 90 0 100"/>
+					<g id="etxJourneyMarks"></g>
+					<g id="etxJourneyPlane">
+						<g transform="translate(-18 -18) scale(1.5)">
+							<path fill="#fff" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/>
+						</g>
+					</g>
+				</svg>
+				<ol class="etx-journey-steps">
+					<li class="etx-journey-step"><span class="etx-ico"><i class="sicon-location" aria-hidden="true"></i></span><span class="etx-num">01</span><h3>اختر وجهتك</h3><p>تصفح الوجهات أو أخبرنا بما تحب، ونقترح عليك الأنسب.</p></li>
+					<li class="etx-journey-step"><span class="etx-ico"><i class="sicon-calendar" aria-hidden="true"></i></span><span class="etx-num">02</span><h3>نصمم برنامجك</h3><p>برنامج يومي مرتب حسب ميزانيتك ووقتك واهتماماتك.</p></li>
+					<li class="etx-journey-step"><span class="etx-ico"><i class="sicon-whatsapp" aria-hidden="true"></i></span><span class="etx-num">03</span><h3>نتفق عبر واتساب</h3><p>نؤكد معك التفاصيل والسعر، ثم يصلك رابط دفع آمن في رسالة نصية.</p></li>
+					<li class="etx-journey-step"><span class="etx-ico"><i class="sicon-airplane" aria-hidden="true"></i></span><span class="etx-num">04</span><h3>انطلق مطمئناً</h3><p>فريقنا معك على واتساب من الإقلاع حتى العودة.</p></li>
+				</ol>
+			</div>
+		</section>
+
+		{# ===== DEPARTURE BOARD: shown only when the merchant fills the numbers in theme settings ===== #}
+		{% set et_stats = [] %}
+		{% for i in 1..4 %}
+			{% set value = theme.settings.get('et_stat' ~ i ~ '_value') %}
+			{% set label = theme.settings.get('et_stat' ~ i ~ '_label') %}
+			{% if value and label %}
+				{% set et_stats = et_stats|merge([{value: value, label: label}]) %}
+			{% endif %}
+		{% endfor %}
+		{% if et_stats|length %}
+			<section class="etx-section">
+				<div class="etx-container etx-board-wrap">
+					<div class="etx-section-head" data-reveal>
+						<span class="etx-kicker">لوحة المغادرة</span>
+						<h2>أرقام <em class="etx-grad-text">تتحدث عنا</em></h2>
+						<p>كل رقم هنا وراءه مسافر عاد بذكريات جميلة. هدفنا أن تكون أنت القادم.</p>
+					</div>
+					<div class="etx-board" data-reveal="left">
+						<div class="etx-board-top"><span>المغادرون · DEPARTURES</span><span class="etx-clock"></span></div>
+						{% for stat in et_stats %}
+							<div class="etx-board-row"><span class="etx-board-label">{{ stat.label }}</span><div class="etx-board-digits" data-text="{{ stat.value }}"></div></div>
+						{% endfor %}
+					</div>
+				</div>
+			</section>
+		{% endif %}
+
+		{# ===== TESTIMONIALS: the store's real reviews; hidden while there are none ===== #}
+		<section class="etx-section etx-testi" id="etxTesti" hidden>
+			<div class="etx-container etx-testi-grid">
+				<div>
+					<div class="etx-section-head" style="margin-bottom:0">
+						<span class="etx-kicker">بطاقات من مسافرينا</span>
+						<h2 data-split>قصص كُتبت <em>من الطريق</em></h2>
+						<p>أجمل ما نتلقاه بعد كل رحلة: بطاقة شكر من مسافر عاد سعيداً.</p>
+					</div>
+					<div class="etx-testi-controls">
+						<button class="etx-btn etx-btn-dark etx-btn-sm" type="button" id="etxTestiNext">البطاقة التالية <i class="sicon-arrow-left" aria-hidden="true"></i></button>
+						<div class="etx-testi-progress" aria-hidden="true"><i></i></div>
+					</div>
+				</div>
+				<div class="etx-postcards" id="etxPostcards" data-reveal="left"></div>
+			</div>
+		</section>
+
+		{# Elements the merchant adds from the store designer #}
 		{% component home %}
 
-		<section class="et-section et-destinations" aria-labelledby="et-destinations-title">
-			<div class="container">
-				<div class="et-section__heading">
-					<div>
-						<span class="et-kicker">وجهات تنتظرك</span>
-						<h2 id="et-destinations-title">إلى أين تأخذك <em>أحلامك؟</em></h2>
-					</div>
-					<a class="et-text-link" href="#travel-packages">تصفّح رحلات المتجر <span aria-hidden="true">←</span></a>
+		{# ===== INSPIRATION MOSAIC (trip photos) ===== #}
+		<section class="etx-section" id="etxMosaicSection" hidden>
+			<div class="etx-container">
+				<div class="etx-section-head center">
+					<span class="etx-kicker">إلهام لرحلتك</span>
+					<h2 data-split>العالم <em>بعدسة المسافر</em></h2>
 				</div>
-				<div class="et-destinations__grid">
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">إسطنبول</span><span class="et-destination__hint">بين التاريخ والحياة</span>
-					</a>
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">المالديف</span><span class="et-destination__hint">لحظات على مهل</span>
-					</a>
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">كابادوكيا</span><span class="et-destination__hint">سماء لا تشبه غيرها</span>
-					</a>
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">سويسرا</span><span class="et-destination__hint">طبيعة تفتح النفس</span>
-					</a>
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">بالي</span><span class="et-destination__hint">استرخاء بطابع استوائي</span>
-					</a>
-					<a class="et-destination" href="#travel-packages" style="--et-destination-image:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=75')">
-						<span class="et-destination__name">دبي</span><span class="et-destination__hint">مدينة لا تهدأ</span>
-					</a>
-				</div>
+				<div class="etx-mosaic" id="etxMosaic" data-stagger></div>
 			</div>
 		</section>
 
-		<section class="et-section et-packages" id="travel-packages" aria-labelledby="et-packages-title">
-			<div class="container">
-				<div class="et-section__heading">
-					<div>
-						<span class="et-kicker">باقات ورحلات</span>
-						<h2 id="et-packages-title">اختر رحلتك <em>القادمة</em></h2>
-						<p class="et-section__intro">تتغير الأسعار حسب الموعد والموسم، لذلك نحددها معك عند الحجز عبر واتساب.</p>
-					</div>
-				</div>
-				<salla-products-list data-testid="easy-travel-products" source="latest"></salla-products-list>
-			</div>
-		</section>
-
-		<section class="et-section et-steps" id="travel-how-it-works" aria-labelledby="et-steps-title">
-			<div class="container">
-				<div class="et-section__heading">
-					<div>
-						<span class="et-kicker">كيف نعمل</span>
-						<h2 id="et-steps-title">من الفكرة إلى <em>الإقلاع</em></h2>
-					</div>
-				</div>
-				<div class="et-steps__grid">
-					<article class="et-step"><span class="et-step__number">01</span><h3>اختر وجهتك</h3><p>استكشف الرحلات المتاحة أو شاركنا الوجهة التي تحلم بها.</p></article>
-					<article class="et-step"><span class="et-step__number">02</span><h3>نرتب التفاصيل</h3><p>نساعدك على تنسيق برنامج يناسب وقتك واهتماماتك.</p></article>
-					<article class="et-step"><span class="et-step__number">03</span><h3>احجز عبر واتساب</h3><p>نتفق معك على التفاصيل والسعر، ثم يصلك رابط دفع آمن في رسالة نصية.</p></article>
-					<article class="et-step"><span class="et-step__number">04</span><h3>استمتع برحلتك</h3><p>انطلق لرحلتك واحتفظ بتفاصيل حجزك في حسابك بالمتجر.</p></article>
-				</div>
-			</div>
-		</section>
-
-		<section class="et-contact" id="travel-contact" aria-labelledby="et-contact-title">
-			<div class="container et-contact__inner">
-				<div>
-					<span class="et-kicker">جاهز للإقلاع؟</span>
-					<h2 id="et-contact-title">رحلتك القادمة<br>تبدأ <em>برسالة</em></h2>
-					<p>راسلنا عبر واتساب أو تواصل معنا هاتفيًا أو بالبريد، وسنساعدك في التخطيط.</p>
-				</div>
-				<div class="et-contact__channels">
-					{% set et_phone = theme.settings.get('et_phone', '0509890653') %}
-					{% set et_email = theme.settings.get('et_email', 'Easytravel.911@gmail.com') %}
-					<a data-testid="easy-travel-whatsapp" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
-					<a href="tel:{{ et_phone }}"><i class="sicon-phone" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
-					<a href="mailto:{{ et_email }}"><i class="sicon-mail" aria-hidden="true"></i><span dir="ltr">{{ et_email }}</span></a>
+		{# ===== CTA ===== #}
+		<section class="etx-section" id="travel-contact" style="padding-top:0">
+			<div class="etx-container">
+				<div class="etx-cta" data-reveal="zoom">
+					<img class="etx-cta-bg" src="{{ 'images/cta-sky.jpg'|asset }}" alt="" data-parallax="0.12" loading="lazy">
+					<svg class="etx-cta-plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+					<span class="etx-kicker">جاهز للإقلاع؟</span>
+					<h2>رحلتك القادمة <span class="etx-script">على بُعد رسالة</span></h2>
+					<p>أخبرنا إلى أين تحلم أن تذهب، ونرتب لك كل التفاصيل.</p>
+					<a class="etx-btn etx-btn-wa etx-btn-lg" data-et-booking href="https://wa.me/{{ et_whatsapp }}" target="_blank" rel="noopener"><i class="sicon-whatsapp" aria-hidden="true"></i> ابدأ المحادثة الآن</a>
 				</div>
 			</div>
 		</section>

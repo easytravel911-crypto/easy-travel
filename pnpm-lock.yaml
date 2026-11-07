@@ -17,6 +17,9 @@ importers:
       fslightbox:
         specifier: ^3.7.5
         version: 3.7.5
+      lenis:
+        specifier: 1.1.13
+        version: 1.1.13
       lite-youtube-embed:
         specifier: ^0.3.4
         version: 0.3.4
@@ -949,6 +952,10 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       postcss: ^8.4
+
+  '@darkroom.engineering/tempus@0.0.46':
+    resolution: {integrity: sha512-s5vav3KMHYezvUCl4ee5epg0oimF6M8C9gAaKxFnFaTvX2q3ywFDryIv6XLd0mRFUt3S1uHDJqKaiEcs2ZVSvw==}
+    deprecated: 'The ''@darkroom.engineering/tempus'' package has been renamed to ''tempus''. Please update your dependencies: npm install tempus and visit the documentation: https://www.npmjs.com/package/tempus'
 
   '@discoveryjs/json-ext@1.1.0':
     resolution: {integrity: sha512-Xc3VhU02wqZ1HvHRJUwL09HkZSTvidqY5Ya0NXBSYOxAp+Ln9dcJr9fySI+CkONzP3PekQo9WdzCv0PGER/mOA==}
@@ -2043,6 +2050,17 @@ packages:
 
   lang.js@1.1.14:
     resolution: {integrity: sha512-HsNKw3b7tYHwDQux3lQtbLGAntwJ5fl8Pl1BPXTKu+gdpaZsK9d787yFmLi6/LSXeNSgPO1CjZDKkrrPsERbSw==}
+
+  lenis@1.1.13:
+    resolution: {integrity: sha512-iny+vWwUHcZGbJz+p2I75H1muLBRZqSG7t04jnhA+CWOQDFL1vt9bsZDwPPtYEmYVVvqAdo5MbXVFzNOlbgUkQ==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   lilconfig@3.1.3:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
@@ -3990,6 +4008,8 @@ snapshots:
     dependencies:
       postcss: 8.5.16
 
+  '@darkroom.engineering/tempus@0.0.46': {}
+
   '@discoveryjs/json-ext@1.1.0': {}
 
   '@googlemaps/markerclusterer@2.6.2':
@@ -4366,8 +4386,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ajv-formats@2.1.1(ajv@8.20.0):
-    optionalDependencies:
+  ajv-formats@2.1.1:
+    dependencies:
       ajv: 8.20.0
 
   ajv-keywords@5.1.0(ajv@8.20.0):
@@ -5097,6 +5117,10 @@ snapshots:
 
   lang.js@1.1.14: {}
 
+  lenis@1.1.13:
+    dependencies:
+      '@darkroom.engineering/tempus': 0.0.46
+
   lilconfig@3.1.3: {}
 
   lines-and-columns@1.2.4: {}
@@ -5823,7 +5847,7 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.20.0
-      ajv-formats: 2.1.1(ajv@8.20.0)
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0(ajv@8.20.0)
 
   semver@7.8.5: {}

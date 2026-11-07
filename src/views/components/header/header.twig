@@ -5,84 +5,41 @@
 | cart.items_count | int     |                                 |
 | cart.total       | string  | Formatted total ex: "١٠٠ ر.س"   |
 #}
-{% set important_links = theme.settings.get('important_links') %}
-<header data-testid="store-header" class="store-header">
-  {# Bullet Delivery tag — mobile: own full-width row above the top nav
-     (Figma "Mobile version"). Desktop keeps the inline pill below, next to
-     scopes. Both instances self-gate on the same backend flag; `lg:hidden`
-     matches the mobile/desktop split already used for the menu toggle below. #}
+{# Easy Travel header: frosted bar that hides while scrolling down and returns on scroll up. #}
+<header data-testid="store-header" class="store-header etx-header" id="etxHeader">
   <div class="lg:hidden">
     <salla-bullet-delivery-tag></salla-bullet-delivery-tag>
   </div>
+  <div class="etx-container etx-header-inner">
+    <div class="etx-header-start">
+      <a data-testid="store-header-mobile-toggle" class="lg:hidden mburger mburger--collapse etx-icon-btn" href="#mobile-menu" aria-label="Open-menu">
+        <i class="sicon-menu" aria-hidden="true"></i>
+      </a>
+      <a data-testid="store-header-logo" class="navbar-brand etx-brand" href="{{ store.url }}">
+        <img fetchpriority="high" loading="eager" src="{{ (theme.settings.get('et_use_store_logo') and store.logo) ? store.logo|cdn(175) : 'images/logo.png'|asset }}" alt="{{ store.name }}">
+        {% if is_page('index') %}
+          <h1 class="sr-only">{{ store.name }}</h1>
+        {% else %}
+          <h2 class="sr-only">{{ store.name }}</h2>
+        {% endif %}
+      </a>
+    </div>
 
-  {# Top Nav #}
-  <div class="top-navbar">
-    <div class="container flex justify-between">
-      <div class="flex-1 flex items-center gap-2">
-          {# Footer Menu #}
-          {% if important_links %}
-            <salla-menu data-testid="store-header-topnav" source="footer" topnav></salla-menu>
-          {% endif %}
+    <nav class="etx-nav" aria-label="{{ trans('blocks.header.main_menu') }}">
+      <custom-main-menu></custom-main-menu>
+    </nav>
 
-          {# Language & Currency Component #}
-          <div class="header-buttons">
-              {% if store.settings.is_multilingual or store.settings.currencies_enabled %}
-                  <salla-localization-modal data-testid="store-header-localization" show-trigger></salla-localization-modal>
-              {% endif %}
-          </div>
-
-          {# Bullet Delivery tag — desktop only; mobile instance is above the top nav #}
-          <div class="hidden lg:block">
-            <salla-bullet-delivery-tag></salla-bullet-delivery-tag>
-          </div>
-
-          {# Scopes | Branches #}
-          {% if store.scope %}
-              <button class="btn--rounded-gray"
-                      onclick="salla.event.dispatch('scopes::open', {'mode': 'default'})">
-                  <i class="sicon-location rtl:ml-1 ltr:mr-1"></i> {{ store.scope.name }}
-              </button>
-          {% endif %}
-
-          {# Search bar #}
-          <div class="header-search flex-1">
-            <salla-search data-testid="store-header-search" inline oval height="36"></salla-search>
-          </div>
-      </div>
-
-      {% set et_phone = theme.settings.get('et_phone', '0509890653') %}
-      {% set et_email = theme.settings.get('et_email', 'Easytravel.911@gmail.com') %}
-      <div data-testid="store-header-contacts" class="et-topbar-contacts">
-        <a href="tel:{{ et_phone }}"><i class="sicon-phone" aria-hidden="true"></i><span dir="ltr">{{ et_phone }}</span></a>
-        <a class="hidden md:inline-flex" href="mailto:{{ et_email }}"><i class="sicon-mail" aria-hidden="true"></i><span dir="ltr">{{ et_email }}</span></a>
-      </div>
+    <div class="etx-header-actions">
+      {% if store.settings.is_multilingual or store.settings.currencies_enabled %}
+        <salla-localization-modal data-testid="store-header-localization" show-trigger></salla-localization-modal>
+      {% endif %}
+      {% if store.scope %}
+        <button class="etx-icon-btn" type="button" aria-label="{{ store.scope.name }}" onclick="salla.event.dispatch('scopes::open', {'mode': 'default'})"><i class="sicon-location" aria-hidden="true"></i></button>
+      {% endif %}
+      <button class="etx-icon-btn" type="button" data-testid="store-header-search" aria-label="{{ trans('common.elements.search') }}" onclick="salla.event.dispatch('search::open')"><i class="sicon-search" aria-hidden="true"></i></button>
+      <salla-user-menu data-testid="store-header-user-menu" avatar-only show-header show-trigger></salla-user-menu>
+      <a class="etx-btn etx-btn-primary etx-btn-sm etx-header-cta" data-et-booking href="https://wa.me/{{ theme.settings.get('et_whatsapp', '966509890653') }}" target="_blank" rel="noopener">احجز رحلتك</a>
     </div>
   </div>
-
-  {# Main Nav #}
-  <div id="mainnav" class="main-nav-container shadow-default bg-white flex items-center">
-      <div class="inner bg-inherit w-full">
-          <div class="container">
-              <div class="flex items-stretch justify-between relative">
-                  <div class="flex items-center">
-                      <a data-testid="store-header-mobile-toggle" class="lg:hidden mburger mburger--collapse leading-none rtl:ml-4 ltr:mr-4" href="#mobile-menu" aria-label="Open-menu">
-                        <i class="sicon-menu text-primary text-2xl"></i>
-                      </a>
-                      <a data-testid="store-header-logo" class="navbar-brand" href="{{ store.url }}">
-                          <img fetchpriority="high" width="100%" height="100%" loading="eager" src="{{ (theme.settings.get('et_use_store_logo') and store.logo) ? store.logo|cdn(175) : 'images/logo.png'|asset }}" alt="{{ store.name }}">
-                          {% if is_page('index') %}
-                            <h1 class="sr-only">{{ store.name }}</h1>
-                          {% else %}
-                            <h2 class="sr-only">{{ store.name }}</h2>
-                          {% endif %}
-                      </a>
-                      <custom-main-menu></custom-main-menu>
-                  </div>
-                  <div class="flex items-center justify-end my-2.5">
-                      <salla-user-menu data-testid="store-header-user-menu" avatar-only show-header show-trigger></salla-user-menu>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
 </header>
+<div class="etx-header-space" aria-hidden="true"></div>

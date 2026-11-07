@@ -65,14 +65,25 @@
 
 
     <script data-cfasync="false">
-        // The opening logo screen plays once per visit.
+        document.documentElement.classList.add('js');
+        {% if is_page('index') %}
+        // Home only: the cinematic intro plays when the visitor arrives from outside the store,
+        // not when coming back to the home page from another page of the store.
         try {
-            if (sessionStorage.getItem('et_splash')) {
-                document.documentElement.classList.add('et-no-splash');
-            } else {
-                sessionStorage.setItem('et_splash', '1');
+            var etxRoot = document.documentElement;
+            var etxFromInside = document.referrer.indexOf(location.origin) === 0;
+            if (!etxFromInside) {
+                etxRoot.classList.add('is-intro');
+                // Failsafe: never keep the page locked if the intro script fails to load.
+                setTimeout(function () {
+                    if (!etxRoot.classList.contains('is-intro')) return;
+                    etxRoot.classList.remove('is-intro');
+                    document.dispatchEvent(new Event('intro:done'));
+                }, 16000);
             }
         } catch (error) {}
+        {% endif %}
+        window.et_packages_keyword = "{{ theme.settings.get('et_packages_keyword', 'باقة') }}"
         window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
         window.imageZoom = "{{theme.settings.get('imageZoom')}}"
         window.can_access_wallet = {{ user.can_access_wallet | json_encode }}
@@ -110,6 +121,10 @@
     </style>
     {# Loaded after the inline variables so the Easy Travel brand colours win. #}
     <link rel="stylesheet" href="{{ 'easy-travel.css' | asset }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800&family=Aref+Ruqaa:wght@700&display=swap">
+    <link rel="stylesheet" href="{{ 'easy-travel-x.css' | asset }}">
     <link rel="icon" type="image/png" href="{{ 'images/favicon.png' | asset }}">
     {# tracking services, custom css feature. #}
     {% hook 'head:end' %}
@@ -118,10 +133,6 @@
   {{ theme.settings.get('footer_is_dark') ? ' footer-is-dark' : ' footer-is-light' }}
   {{ theme.settings.get('topnav_is_dark') ? ' topnav-is-dark' : '' }}
   ">
-<div class="et-splash" aria-hidden="true">
-    <img src="{{ 'images/logo.png'|asset }}" alt="">
-    <span class="et-splash__line"></span>
-</div>
 <noscript>
     To get full functionality of this site you need to enable JavaScript. Here is how
     <a href="https://www.enable-javascript.com/" rel="noreferrer"

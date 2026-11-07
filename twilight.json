@@ -133,6 +133,119 @@
         },
         {
             "type": "static",
+            "format": "title",
+            "id": "static-label-home",
+            "value": "<div class='rounded-lg' style='background-color: #1b2f4d; display: flex; justify-content: center; align-items: center;padding: 15px;margin-bottom: 20px !important; flex-direction: column;gap: 15px;'><h6 style='color: #ffffff;font-size: 15px; font-weight: bold;'> الصفحة الرئيسية</h6></div>",
+            "variant": "h6"
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_packages_keyword",
+            "label": "كلمة تمييز الباقات",
+            "description": "المنتجات التي يحتوي اسمها على هذه الكلمة تظهر كبطاقات صعود في قسم «باقاتنا»، وباقي المنتجات تظهر في «وجهات تنتظرك».",
+            "value": "باقة",
+            "icon": "sicon-tag",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "static",
+            "format": "title",
+            "id": "static-desc-board",
+            "value": "<div style='font-size:13px;line-height:1.8;color:#5a6b82;margin:8px 0;'>لوحة المغادرة: اكتب أرقامك الحقيقية فقط. لا تظهر اللوحة في المتجر حتى تملأ رقماً واحداً على الأقل مع وصفه.</div>",
+            "variant": "h6"
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat1_value",
+            "label": "الرقم 1",
+            "description": "مثال: +500",
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat1_label",
+            "label": "وصف الرقم 1",
+            "description": "مثال: مسافر سعيد",
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat2_value",
+            "label": "الرقم 2",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat2_label",
+            "label": "وصف الرقم 2",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat3_value",
+            "label": "الرقم 3",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat3_label",
+            "label": "وصف الرقم 3",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat4_value",
+            "label": "الرقم 4",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "string",
+            "format": "text",
+            "id": "et_stat4_label",
+            "label": "وصف الرقم 4",
+            "description": null,
+            "value": "",
+            "icon": "sicon-chart",
+            "required": false,
+            "multilanguage": false
+        },
+        {
+            "type": "static",
             "id": "static-line-agency",
             "format": "line"
         },

@@ -62,7 +62,8 @@ module.exports = {
         new CopyPlugin({patterns: [
             {from: asset('images'), to: public('images')},
             {from: asset('videos'), to: public('videos')},
-            {from: asset('styles/easy-travel.css'), to: public('easy-travel.css')}
+            {from: asset('styles/easy-travel.css'), to: public('easy-travel.css')},
+            {from: asset('styles/easy-travel-x.css'), to: public('easy-travel-x.css')}
         ]}),
     ],
     optimization: {
