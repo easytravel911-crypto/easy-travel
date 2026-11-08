@@ -9,7 +9,6 @@ import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
 import { menu } from '@salla.sa/twilight-theme-engine/api/menu';
 import type { MenuItem } from '@salla.sa/twilight-theme-engine/types';
-import { HeaderMainMenu } from '../layout/HeaderMainMenu';
 import { readAgencySettings, whatsappLink } from '../../lib/easyTravel';
 import logoUrl from '../../assets/logo.png?url';
 
@@ -112,9 +111,7 @@ export function EtxHeader() {
             </Link>
           </div>
 
-          <nav className="etx-nav" aria-label={menuLabel}>
-            <HeaderMainMenu />
-          </nav>
+          <EtxInlineNav label={menuLabel} />
 
           <div className="etx-header-actions">
             <button
@@ -142,6 +139,21 @@ export function EtxHeader() {
       <div className="etx-header-space" aria-hidden="true" style={space ? { height: space } : undefined} />
       <EtxMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
+  );
+}
+
+/** Desktop: the store's top-level header menu links inline; sub-menus live in the full-screen menu. */
+function EtxInlineNav({ label }: { label: string }) {
+  const { data: items = [] } = useQuery(menu.queries.header());
+  const links = (items as MenuItem[]).filter((item) => item?.title && item?.url).slice(0, 6);
+  return (
+    <nav className="etx-nav" aria-label={label}>
+      {links.map((item) => (
+        <a key={item.id} href={item.url}>
+          {item.title}
+        </a>
+      ))}
+    </nav>
   );
 }
 

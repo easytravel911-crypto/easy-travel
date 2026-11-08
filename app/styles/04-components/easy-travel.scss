@@ -1432,3 +1432,8 @@ html.is-loading { overflow: hidden; }
 @media (max-width: 1080px) { .etx-pass-grid:has(> .etx-pass:nth-child(2):last-child) { grid-template-columns: minmax(0, 460px); } }
 /* With only a few trips the slider cards line up from the start instead of stretching. */
 .etx-dest-scroller:has(> .etx-dest-card:nth-child(-n+3):last-child) { justify-content: flex-start; }
+
+/* ---------- React theme: inline desktop menu (top-level links only) ---------- */
+.etx-nav { gap: 2px; align-items: center; }
+.etx-nav a { color: var(--navy); white-space: nowrap; }
+@media (max-width: 1080px) { .etx-header .etx-nav { display: none; } }

@@ -12,6 +12,19 @@ import {
   type ReactNode,
 } from 'react';
 
+/**
+ * Whether the home preloader or intro is covering the page. Kept here rather than
+ * in <html> classes because the engine rewrites the root element's classes.
+ */
+export const opening = { loading: false, intro: false };
+export const isCovered = (): boolean => opening.loading || opening.intro;
+
+/** Locks page scrolling while the opening covers it (inline style: the engine owns the classes). */
+export function syncOpeningLock() {
+  if (typeof document === 'undefined') return;
+  document.documentElement.style.overflow = isCovered() ? 'hidden' : '';
+}
+
 /** True when the visitor asked the system for less motion. */
 export const prefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -39,21 +52,27 @@ export function useInView<T extends Element>(threshold = 0.15) {
       );
       observer.observe(el);
     };
-    const covered = () =>
-      document.documentElement.classList.contains('is-loading') ||
-      document.documentElement.classList.contains('is-intro');
-    if (!covered()) start();
+    let waiting = false;
+    const wait = () => {
+      if (isCovered()) return;
+      waiting = false;
+      document.removeEventListener('preloader:done', wait);
+      document.removeEventListener('intro:done', wait);
+      start();
+    };
+    if (!isCovered()) start();
     else {
-      const wait = () => {
-        if (covered()) return;
-        document.removeEventListener('preloader:done', wait);
-        document.removeEventListener('intro:done', wait);
-        start();
-      };
+      waiting = true;
       document.addEventListener('preloader:done', wait);
       document.addEventListener('intro:done', wait);
     }
-    return () => observer?.disconnect();
+    return () => {
+      observer?.disconnect();
+      if (waiting) {
+        document.removeEventListener('preloader:done', wait);
+        document.removeEventListener('intro:done', wait);
+      }
+    };
   }, [inView, threshold]);
   return [ref, inView] as const;
 }
@@ -119,20 +138,23 @@ export function SplitHeading({
 }) {
   const [ref, inView] = useInView<HTMLHeadingElement>();
   let index = 0;
+  // The space sits between the word masks (not inside them), so it is never clipped away.
   const words = (value: string) =>
     value
       .split(/\s+/)
       .filter(Boolean)
-      .map((word) => (
+      .flatMap((word, i) => [
+        i > 0 ? ' ' : null,
         <span className="etx-w" key={`${word}-${index}`}>
-          <span style={{ ['--i' as string]: index++ }}>{word}</span>{' '}
-        </span>
-      ));
+          <span style={{ ['--i' as string]: index++ }}>{word}</span>
+        </span>,
+      ]);
   return createElement(
     as,
     { ref, id, 'data-split': '', className: `${className ?? ''}${inView ? ' is-in' : ''}`.trim() },
     <>
       {words(text)}
+      {accent && ' '}
       {accent && <em>{words(accent)}</em>}
     </>
   );

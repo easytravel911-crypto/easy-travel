@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { prefersReducedMotion } from './motion';
+import { opening, prefersReducedMotion, syncOpeningLock } from './motion';
 import logoUrl from '../../assets/logo.png?url';
 
 /**
@@ -19,20 +19,25 @@ export function EtxOpening() {
 
 const MIN_VISIBLE_MS = 1300;
 
+// Once per page load: a remount (fast refresh, a suspended sibling) must not replay the opening.
+let preloaderPlayed = false;
+let introPlayed = false;
+
 function EtxPreloader() {
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
-  const [gone, setGone] = useState(false);
+  const [gone, setGone] = useState(() => preloaderPlayed);
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add('is-loading');
+    if (preloaderPlayed) return;
+    opening.loading = true;
+    syncOpeningLock();
     const startedAt = Date.now();
     let value = 0;
     let loaded = document.readyState === 'complete';
     const onLoad = () => (loaded = true);
     window.addEventListener('load', onLoad);
-    const failsafe = window.setTimeout(() => (loaded = true), 8000);
+    const failsafe = window.setTimeout(() => (loaded = true), 4500); // never hold visitors on a slow file
     const timer = window.setInterval(() => {
       value = loaded ? Math.min(100, value + 6) : value + (90 - value) * 0.05;
       setProgress(value);
@@ -40,7 +45,9 @@ function EtxPreloader() {
         window.clearInterval(timer);
         window.setTimeout(() => {
           setDone(true);
-          root.classList.remove('is-loading');
+          preloaderPlayed = true;
+          opening.loading = false;
+          syncOpeningLock();
           document.dispatchEvent(new Event('preloader:done'));
           window.setTimeout(() => setGone(true), 1100);
         }, 150);
@@ -50,7 +57,8 @@ function EtxPreloader() {
       window.clearInterval(timer);
       window.clearTimeout(failsafe);
       window.removeEventListener('load', onLoad);
-      root.classList.remove('is-loading');
+      opening.loading = false;
+      syncOpeningLock();
     };
   }, []);
 
@@ -153,6 +161,7 @@ function EtxIntro() {
   const finishRef = useRef<() => void>(() => {});
 
   useEffect(() => {
+    if (introPlayed) return;
     let fromInside = false;
     try {
       fromInside = document.referrer.startsWith(window.location.origin);
@@ -160,8 +169,8 @@ function EtxIntro() {
       /* ignore */
     }
     if (fromInside) return;
-    const root = document.documentElement;
-    root.classList.add('is-intro');
+    opening.intro = true;
+    syncOpeningLock();
     const timers: number[] = [];
     let finished = false;
     let frame = 0;
@@ -169,10 +178,12 @@ function EtxIntro() {
     const finish = () => {
       if (finished) return;
       finished = true;
+      introPlayed = true;
       timers.forEach((t) => window.clearTimeout(t));
       cancelAnimationFrame(frame);
       setStage('lift');
-      root.classList.remove('is-intro');
+      opening.intro = false;
+      syncOpeningLock();
       document.dispatchEvent(new Event('intro:done'));
       timers.push(window.setTimeout(() => setStage('gone'), 1200));
     };
@@ -223,7 +234,7 @@ function EtxIntro() {
     };
 
     // The preloader covers the page first; the intro plays once it has gone.
-    if (root.classList.contains('is-loading')) document.addEventListener('preloader:done', play, { once: true });
+    if (opening.loading) document.addEventListener('preloader:done', play, { once: true });
     else play();
     // Failsafe: never keep the page locked.
     timers.push(window.setTimeout(finish, 16000));
@@ -232,7 +243,10 @@ function EtxIntro() {
       timers.forEach((t) => window.clearTimeout(t));
       cancelAnimationFrame(frame);
       document.removeEventListener('preloader:done', play);
-      root.classList.remove('is-intro');
+      if (!finished) {
+        opening.intro = false;
+        syncOpeningLock();
+      }
     };
   }, []);
 

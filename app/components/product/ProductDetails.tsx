@@ -2,9 +2,8 @@ import { Fragment, useRef, useState, type MouseEvent } from 'react';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { HookName } from '@salla.sa/twilight-theme-engine/types/hooks';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
-import { getActiveCurrency } from '@salla.sa/twilight-theme-engine/api/client';
 import { useWishlist } from '@salla.sa/twilight-theme-engine/hooks/useWishlist';
-import { CurrencySymbol, Link, Image } from '@salla.sa/twilight-theme-engine/common';
+import { Link, Image } from '@salla.sa/twilight-theme-engine/common';
 import { formatSallaPlural } from '@salla.sa/twilight-theme-engine/utils';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { SallaRatingStars } from '@salla.sa/twilight-components-react/rating-stars';
@@ -93,11 +92,7 @@ export function ProductDetails({
         </div>
       )}
 
-      {product.is_taxable && (
-        <small className="color-grey">{t('pages.products.tax_included')}</small>
-      )}
-
-      <ProductPrice product={product} />
+      {/* Easy Travel: no public price — it is agreed per date over WhatsApp (see EtxBooking). */}
 
       <ProductDescription product={product} />
 
@@ -202,33 +197,6 @@ function TitleWishlistButton({ productId }: { productId: number }) {
       onClick={() => window.salla?.wishlist.toggle(productId)}
       ariaLabel={t('pages.products.add_to_wishlist', 'Add to wishlist')}
     />
-  );
-}
-
-function ProductPrice({ product }: { product: Product }) {
-  const { t } = useTranslation();
-  // The API converts the amounts but still labels them in the store's own currency.
-  const priceCurrency = getActiveCurrency(product.currency);
-
-  return (
-    <div className="flex whitespace-nowrap gap-4 items-center mb-2.5">
-      <div
-        className={`${product.is_on_sale ? '' : 'hidden'} space-x-2 rtl:space-x-reverse whitespace-nowrap`}
-      >
-        <p className="text-red-800 font-bold text-xl inline-block">
-          {product.sale_price} <CurrencySymbol currency={priceCurrency} />
-        </p>
-        <span className="text-gray-500 line-through">
-          {product.regular_price} <CurrencySymbol currency={priceCurrency} />
-        </span>
-      </div>
-      <div className={`gap-4 ${product.is_on_sale ? 'hidden' : 'flex'}`}>
-        {product.starting_price && <span>{t('pages.products.starting_price')}</span>}
-        <p className="font-bold text-xl inline-block">
-          {product.starting_price ?? product.price} <CurrencySymbol currency={priceCurrency} />
-        </p>
-      </div>
-    </div>
   );
 }
 

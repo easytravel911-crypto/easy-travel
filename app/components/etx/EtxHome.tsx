@@ -1,4 +1,5 @@
 import {
+  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -13,7 +14,7 @@ import { product as productApi } from '@salla.sa/twilight-theme-engine/api/produ
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { EtxOpening } from './EtxOpening';
-import { Reveal, SplitHeading, Stagger, prefersReducedMotion, useInView } from './motion';
+import { Reveal, SplitHeading, Stagger, isCovered, prefersReducedMotion, useInView } from './motion';
 import { placeOf, readAgencySettings, whatsappLink, whatsappMessage } from '../../lib/easyTravel';
 import heroPosterUrl from '../../assets/hero-poster.jpg?url';
 import heroVideoUrl from '../../assets/hero.mp4?url';
@@ -58,7 +59,8 @@ export function EtxHome({ children }: { children?: ReactNode }) {
         <Journey />
         {agency.stats.length > 0 && <Board stats={agency.stats} />}
         <Testimonials />
-        {children}
+        {/* The merchant's blocks load lazily; their own boundary keeps the rest of the page mounted. */}
+        <Suspense fallback={null}>{children}</Suspense>
         <Mosaic items={(trips.length >= 3 ? trips : products).filter((p) => imageOf(p)).slice(0, 6)} />
         <Cta whatsapp={agency.whatsapp} />
       </div>
@@ -82,11 +84,9 @@ function useSmoothScroll() {
         frame = requestAnimationFrame(raf);
       };
       frame = requestAnimationFrame(raf);
-      const root = document.documentElement;
-      const covered = () => root.classList.contains('is-loading') || root.classList.contains('is-intro');
-      if (covered()) {
+      if (isCovered()) {
         lenis.stop();
-        const resume = () => !covered() && lenis?.start();
+        const resume = () => !isCovered() && lenis?.start();
         document.addEventListener('preloader:done', resume);
         document.addEventListener('intro:done', resume);
       }
@@ -173,8 +173,8 @@ function Planner({ whatsapp, options }: { whatsapp: string; options: string[] })
             </div>
             <div className="etx-field">
               <label htmlFor="etxPlannerDestination">إلى أين؟</label>
-              <select id="etxPlannerDestination" name="destination">
-                {options.map((name) => (
+              <select id="etxPlannerDestination" name="destination" key={options.length}>
+                {[...new Set(options.filter(Boolean))].map((name) => (
                   <option key={name}>{name}</option>
                 ))}
                 <option>وجهة أخرى / ساعدوني في الاختيار</option>

@@ -255,21 +255,15 @@ describe('ProductDetails wishlist heart', () => {
   });
 });
 
+// Easy Travel agrees every price per date over WhatsApp, so the trip page shows none.
 describe('ProductDetails price', () => {
-  afterEach(() => {
-    document.cookie = 's-curr=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-  });
-
-  it('labels the price in the currency the visitor chose, not the SAR the API reports', async () => {
-    document.cookie = 's-curr=EUR; path=/';
+  it('shows no public price or tax line', () => {
     const { container } = render(
-      <ProductDetails product={makeProduct({ price: 118.66, currency: 'SAR' })} />
+      <ProductDetails product={makeProduct({ price: 118.66, currency: 'SAR', is_taxable: true })} />
     );
 
-    const price = () =>
-      [...container.querySelectorAll('p')].find((p) => p.textContent?.includes('118.66'));
-    await waitFor(() => expect(price()?.textContent).toContain('EUR'));
-    expect(price()?.querySelector('.sicon-sar')).toBeNull();
+    expect(container.textContent).not.toContain('118.66');
+    expect(container.textContent).not.toContain('pages.products.tax_included');
   });
 });
 
