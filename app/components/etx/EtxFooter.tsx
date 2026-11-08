@@ -34,7 +34,7 @@ export function EtxFooter() {
           <div className="etx-footer-grid">
             <div className="etx-footer-about">
               <Link to="/" className="et-footer-logo etx-footer-logo">
-                <img loading="lazy" src={logo} alt={store?.name || 'سهل السفر'} />
+                <img loading="lazy" src={logo} alt={store?.name || 'سهل السفر'} width={539} height={600} />
               </Link>
               {store?.description ? (
                 <div className="etx-footer-desc" dangerouslySetInnerHTML={{ __html: store.description }} />

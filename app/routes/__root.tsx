@@ -35,10 +35,14 @@ const CRITICAL_CSS = {
   [PRODUCT_ROUTE_ID]: import.meta.env.SSR ? productCriticalCss : '',
 };
 
+const NO_JS_REVEAL_CSS =
+  '.js [data-reveal],.js [data-stagger]>*{opacity:1!important;transform:none!important}' +
+  '.js [data-split] .etx-w>span{transform:none!important}';
+
 function RootComponent() {
   const ctx = getTwilightContext();
   return (
-    <html lang={ctx.locale} dir={ctx.dir} suppressHydrationWarning>
+    <html lang={ctx.locale} dir={ctx.dir} className="js" suppressHydrationWarning>
       <head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -47,8 +51,11 @@ function RootComponent() {
             their first screen has painted. Other routes: the full sheet blocks, as before. */}
         <ThemeStylesheet href={appCssUrl} critical={CRITICAL_CSS} />
         <ThemeHeadContent />
-        {/* Easy Travel: lets the scroll-reveal styles hide content only when JavaScript runs. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Easy Travel: the scroll-reveal styles hide content under `.js` until it scrolls into
+            view. Without JavaScript nothing would reveal it, so show everything instead. */}
+        <noscript>
+          <style>{NO_JS_REVEAL_CSS}</style>
+        </noscript>
       </head>
       <body suppressHydrationWarning>
         <noscript>

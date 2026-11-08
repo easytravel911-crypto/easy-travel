@@ -8,6 +8,8 @@ import {
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  type RefObject,
+  type CSSProperties,
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { product as productApi } from '@salla.sa/twilight-theme-engine/api/product';
@@ -39,6 +41,7 @@ export function EtxHome({ children }: { children?: ReactNode }) {
   const { theme } = useTwilight();
   const agency = readAgencySettings(theme?.settings);
   useSmoothScroll();
+  const packagesRef = useRef<HTMLElement>(null);
 
   const { data } = useQuery(productApi.queries.list({ source: 'latest' }));
   // The API lists newest first; the store's own order (oldest first) reads better.
@@ -51,11 +54,11 @@ export function EtxHome({ children }: { children?: ReactNode }) {
     <>
       <EtxOpening />
       <div className="et-home etx-scope">
-        <Hero whatsapp={agency.whatsapp} videoUrl={agency.heroVideoUrl || heroVideoUrl} />
+        <Hero whatsapp={agency.whatsapp} videoUrl={agency.heroVideoUrl || heroVideoUrl} packagesRef={packagesRef} />
         <Planner whatsapp={agency.whatsapp} options={products.map((p) => p.name)} />
         <Marquee names={trips.map((p) => placeOf(p.name))} />
         {trips.length > 0 && <Destinations trips={trips} />}
-        {packages.length > 0 && <Passes packages={packages} whatsapp={agency.whatsapp} />}
+        {packages.length > 0 && <Passes packages={packages} whatsapp={agency.whatsapp} sectionRef={packagesRef} />}
         <Journey />
         {agency.stats.length > 0 && <Board stats={agency.stats} />}
         <Testimonials />
@@ -100,8 +103,8 @@ function useSmoothScroll() {
   }, []);
 }
 
-function scrollToId(event: ReactMouseEvent<HTMLAnchorElement>, id: string) {
-  const target = document.getElementById(id);
+function scrollToSection(event: ReactMouseEvent<HTMLAnchorElement>, section: RefObject<HTMLElement | null>) {
+  const target = section.current;
   if (!target) return;
   event.preventDefault();
   const lenis = (window as unknown as { etxLenis?: Lenis }).etxLenis;
@@ -110,7 +113,15 @@ function scrollToId(event: ReactMouseEvent<HTMLAnchorElement>, id: string) {
 }
 
 /* ---------- Hero: kept exactly as the agency's current design ---------- */
-function Hero({ whatsapp, videoUrl }: { whatsapp: string; videoUrl: string }) {
+function Hero({
+  whatsapp,
+  videoUrl,
+  packagesRef,
+}: {
+  whatsapp: string;
+  videoUrl: string;
+  packagesRef: RefObject<HTMLElement | null>;
+}) {
   return (
     <>
       <section className="et-hero-video" aria-hidden="true">
@@ -128,7 +139,7 @@ function Hero({ whatsapp, videoUrl }: { whatsapp: string; videoUrl: string }) {
           </h2>
           <p>اختر وجهتك، ودعنا نرتب لك رحلة متكاملة من الطيران والإقامة إلى أجمل التجارب.</p>
           <div className="et-hero__actions">
-            <a className="et-button et-button--primary" href="#travel-packages" onClick={(e) => scrollToId(e, 'travel-packages')}>
+            <a className="et-button et-button--primary" href="#travel-packages" onClick={(e) => scrollToSection(e, packagesRef)}>
               اكتشف الرحلات <span aria-hidden="true">←</span>
             </a>
             <a className="et-button et-button--whatsapp" href={whatsappLink(whatsapp)} target="_blank" rel="noopener">
@@ -322,7 +333,7 @@ function Destinations({ trips }: { trips: Product[] }) {
           const place = placeOf(trip.name);
           return (
             <a key={trip.id} className="etx-dest-card" href={trip.url} draggable={false}>
-              {imageOf(trip) && <img src={imageOf(trip)} alt={trip.name} loading="lazy" draggable={false} />}
+              {imageOf(trip) && <img src={imageOf(trip)} alt={trip.name} width={600} height={800} loading="lazy" draggable={false} />}
               <span className="etx-dest-stamp" aria-hidden="true">
                 سهل السفر<b>{place}</b>✈
               </span>
@@ -374,28 +385,43 @@ const CHECK = (
   </svg>
 );
 
-function Passes({ packages, whatsapp }: { packages: Product[]; whatsapp: string }) {
+function Passes({
+  packages,
+  whatsapp,
+  sectionRef,
+}: {
+  packages: Product[];
+  whatsapp: string;
+  sectionRef: RefObject<HTMLElement | null>;
+}) {
   // Three passes: the middle one is featured. A single pass is featured and centred.
   const featuredIndex = packages.length === 3 ? 1 : packages.length === 1 ? 0 : -1;
   const classes = ['ECONOMY+', 'BUSINESS', 'FIRST'];
   const gates = ['A1', 'B7', 'VIP'];
   const seats = ['14C', '3A', '1A'];
-  const tilt = useTilt();
+  const { handlers: tiltHandlers, tiltOf } = useTilt();
 
   return (
-    <section className="etx-section etx-packages" id="travel-packages">
+    <section ref={sectionRef} className="etx-section etx-packages" id="travel-packages">
       <div className="etx-container">
         <div className="etx-section-head center">
           <span className="etx-kicker">باقاتنا</span>
           <SplitHeading text="اختر" accent="بطاقة صعودك" />
           <p>باقات تناسب كل مسافر. اختر الأنسب لك واحجز مباشرة عبر واتساب خلال دقائق.</p>
         </div>
-        <div className="etx-pass-grid" {...tilt}>
+        <div className="etx-pass-grid" {...tiltHandlers}>
           {packages.map((p, index) => {
             const featured = index === featuredIndex;
             const cls = packages.length === 1 ? 'BUSINESS' : classes[index] || 'ECONOMY+';
+            const tilt = tiltOf(index);
             return (
-              <Reveal key={p.id} as="article" className={`etx-pass${featured ? ' featured' : ''}`} delay={index * 140}>
+              <Reveal
+                key={p.id}
+                as="article"
+                className={`etx-pass${featured ? ' featured' : ''}${tilt ? ' tilting' : ''}`}
+                style={tilt}
+                delay={index * 140}
+              >
                 {featured && <span className="etx-pass-ribbon">★ الأكثر طلباً</span>}
                 <div className="etx-pass-main">
                   <div className="etx-pass-top">
@@ -465,33 +491,33 @@ function Passes({ packages, whatsapp }: { packages: Product[]; whatsapp: string 
   );
 }
 
-/** 3D tilt for boarding passes under a mouse pointer. */
+/** 3D tilt for boarding passes under a mouse pointer, kept in React state. */
 function useTilt() {
+  const [tilt, setTilt] = useState<{ index: number; rx: string; ry: string } | null>(null);
   const enabled =
     typeof window !== 'undefined' &&
     window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
     !prefersReducedMotion();
-  if (!enabled) return {};
-  const reset = (card: HTMLElement) => {
-    card.classList.remove('tilting');
-    card.style.removeProperty('--rx');
-    card.style.removeProperty('--ry');
-  };
-  return {
-    onPointerMove: (event: ReactPointerEvent<HTMLDivElement>) => {
-      const card = (event.target as HTMLElement).closest<HTMLElement>('.etx-pass');
-      event.currentTarget.querySelectorAll<HTMLElement>('.etx-pass.tilting').forEach((other) => other !== card && reset(other));
-      if (!card) return;
-      const rect = card.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-      card.classList.add('tilting');
-      card.style.setProperty('--rx', `${(-y * 7).toFixed(2)}deg`);
-      card.style.setProperty('--ry', `${(x * 9).toFixed(2)}deg`);
-    },
-    onPointerLeave: (event: ReactPointerEvent<HTMLDivElement>) =>
-      event.currentTarget.querySelectorAll<HTMLElement>('.etx-pass.tilting').forEach(reset),
-  };
+  const handlers = enabled
+    ? {
+        onPointerMove: (event: ReactPointerEvent<HTMLDivElement>) => {
+          const card = (event.target as HTMLElement).closest('.etx-pass');
+          const index = card ? Array.prototype.indexOf.call(event.currentTarget.children, card) : -1;
+          if (!card || index < 0) {
+            setTilt(null);
+            return;
+          }
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          setTilt({ index, rx: `${(-y * 7).toFixed(2)}deg`, ry: `${(x * 9).toFixed(2)}deg` });
+        },
+        onPointerLeave: () => setTilt(null),
+      }
+    : {};
+  const tiltOf = (index: number): CSSProperties | undefined =>
+    tilt && tilt.index === index ? ({ '--rx': tilt.rx, '--ry': tilt.ry } as CSSProperties) : undefined;
+  return { handlers, tiltOf };
 }
 
 /* ---------- Journey: the plane draws its path while scrolling ---------- */
@@ -795,7 +821,7 @@ function Testimonials() {
                   </div>
                 </div>
                 <div className="etx-postcard-side" aria-hidden="true">
-                  <div className="etx-stamp">{image && <img src={image} alt="" />}</div>
+                  <div className="etx-stamp">{image && <img src={image} alt="" width={72} height={90} />}</div>
                   <div className="etx-postmark">
                     سهل السفر
                     <br />✈
@@ -829,7 +855,7 @@ function Mosaic({ items }: { items: Product[] }) {
           {items.map((p) => (
             <figure key={p.id}>
               <a href={p.url}>
-                <img src={imageOf(p)} alt={p.name} loading="lazy" />
+                <img src={imageOf(p)} alt={p.name} width={600} height={600} loading="lazy" />
               </a>
               <figcaption>{placeOf(p.name)}</figcaption>
             </figure>
@@ -872,7 +898,7 @@ function Cta({ whatsapp }: { whatsapp: string }) {
     <section className="etx-section" id="travel-contact" style={{ paddingTop: 0 }}>
       <div className="etx-container" ref={boxRef}>
         <Reveal variant="zoom" className="etx-cta">
-          <img ref={imgRef} className="etx-cta-bg" src={ctaSkyUrl} alt="" loading="lazy" />
+          <img ref={imgRef} className="etx-cta-bg" src={ctaSkyUrl} alt="" width={1800} height={2700} loading="lazy" />
           <svg className="etx-cta-plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d={PLANE_PATH} />
           </svg>

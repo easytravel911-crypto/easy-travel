@@ -72,7 +72,7 @@ function EtxPreloader() {
               <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" />
             </svg>
           </div>
-          <img className="etx-pl-logo" src={logoUrl} alt="" />
+          <img className="etx-pl-logo" src={logoUrl} alt="" width={96} height={96} />
         </div>
         <div className="etx-pl-name">
           سهل السفر<small>EASY TRAVEL</small>
@@ -286,7 +286,7 @@ function EtxIntro() {
         ))}
       </div>
       <div className="etx-intro-logo">
-        <img src={logoUrl} alt="سهل السفر - Easy Travel" />
+        <img src={logoUrl} alt="سهل السفر - Easy Travel" width={539} height={600} />
       </div>
       <button className="etx-intro-skip" type="button" onClick={() => finishRef.current()}>
         تخطي ←

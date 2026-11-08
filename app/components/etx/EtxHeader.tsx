@@ -6,6 +6,7 @@ import { SallaUserMenu } from '@salla.sa/twilight-components-react/user-menu';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
+import { useDocumentClass } from '@salla.sa/twilight-theme-engine/hooks/useDocumentClass';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
 import { menu } from '@salla.sa/twilight-theme-engine/api/menu';
 import type { MenuItem } from '@salla.sa/twilight-theme-engine/types';
@@ -58,11 +59,14 @@ export function EtxHeader() {
   }, []);
 
   // The spacer follows the real header height so breadcrumbs never sit under the fixed bar.
+  // Measured only while the bar is not in its compact (scrolled) state.
+  const scrolledRef = useRef(scrolled);
+  scrolledRef.current = scrolled;
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
     const fit = () => {
-      if (!el.classList.contains('is-scrolled')) setSpace(el.offsetHeight);
+      if (!scrolledRef.current) setSpace(el.offsetHeight);
     };
     fit();
     const observer = new ResizeObserver(fit);
@@ -70,10 +74,15 @@ export function EtxHeader() {
     return () => observer.disconnect();
   }, []);
 
-  // While the menu is open: lock page scroll, stop smooth scrolling, close on Escape.
+  // While the menu is open: `etx-menu-open` on <body> drives the menu styles and
+  // `etx-menu-lock` on <html> locks page scroll. The engine adds and removes both.
+  useDocumentClass({
+    body: { class: menuOpen ? 'etx-menu-open' : undefined },
+    html: { class: menuOpen ? 'etx-menu-lock' : undefined },
+  });
+
+  // While the menu is open: stop smooth scrolling and close on Escape.
   useEffect(() => {
-    document.body.classList.toggle('etx-menu-open', menuOpen);
-    document.documentElement.style.overflow = menuOpen ? 'hidden' : '';
     const lenis = (window as unknown as { etxLenis?: { stop(): void; start(): void } }).etxLenis;
     if (menuOpen) lenis?.stop();
     else lenis?.start();
@@ -107,7 +116,7 @@ export function EtxHeader() {
               <span />
             </button>
             <Link to="/" className="etx-brand" aria-label={store?.name}>
-              <img src={logo} alt={store?.name || 'سهل السفر'} fetchPriority="high" />
+              <img src={logo} alt={store?.name || 'سهل السفر'} width={539} height={600} fetchPriority="high" />
             </Link>
           </div>
 
