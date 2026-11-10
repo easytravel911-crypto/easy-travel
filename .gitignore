@@ -15,3 +15,6 @@ app/routeTree.gen.ts
 .claude/settings.local.json
 /salla-theme/
 *.log
+
+# Full-size theme icon for the Partners portal (kept out of the zip size limit)
+/theme-icon-1024.png
