@@ -5,7 +5,7 @@ import { useMoney } from '@salla.sa/twilight-theme-engine/hooks/useMoney';
 import { Link, Image } from '@salla.sa/twilight-theme-engine/common';
 import { SallaCartItemOffers } from '@salla.sa/twilight-components-react/cart-item-offers';
 import { Delete01Icon, MinusIcon, PlusIcon } from '../icons';
-import { ProductOptionsPanel, type PanelOption } from '../common/ProductOptionsPanel';
+import { ProductOptionsPanel, type PanelOption } from '../options';
 
 interface CartItemProps {
   item: CartItemType;

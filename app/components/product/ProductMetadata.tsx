@@ -10,23 +10,20 @@ interface ProductMetadataProps {
  * `<SallaMetadata>` (product specs) rendered as collapsible accordion groups.
  *
  * The web component emits static `.s-metadata-box` blocks — this wires
- * click-to-toggle on their `.s-metadata-box-header`s (adds `.is-open` on the
- * box; the open/closed styling lives in `04-components/metadata.scss`) and
- * opens the first group once it appears. A MutationObserver handles the async
- * spec fetch; the click handler is delegated so it survives re-renders.
+ * click-to-toggle on their `.s-metadata-box-header`s and opens the first group
+ * once it appears. A MutationObserver handles the async spec fetch; the click
+ * handler is delegated so it survives re-renders.
  *
  * Rendered under the gallery slider on `md`+ ({@link ProductGallery}) and at the
  * end of the description on mobile ({@link ProductDetails}); the `className`
  * carries the `hidden md:block` / `md:hidden` toggle.
  *
- * The headers are plain `<div>`s, so each one also gets `role="button"`,
- * `tabindex="0"` and an `aria-expanded` that follows its box, and Enter / Space
- * toggle it — otherwise keyboard and screen-reader users can only read the
- * first group.
- *
- * The build's `no-manual-dom` check flags the `classList` / attribute calls.
- * They stay: the boxes are rendered by `<salla-metadata>`, not React, so there
- * is no ref or React state that reaches them.
+ * The headers are plain `<div>`s, so each one gets `role="button"`,
+ * `tabindex="0"` and `aria-expanded`, and Enter / Space toggle it, so keyboard
+ * and screen-reader users can open every group. `aria-expanded` is the only
+ * open/closed state: `04-components/metadata.scss` styles the groups from it.
+ * The boxes come from `<salla-metadata>`, not React, so no React state or ref
+ * reaches them; the attribute keeps the state in one place, with no class changes.
  */
 export function ProductMetadata({ className }: ProductMetadataProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -35,29 +32,18 @@ export function ProductMetadata({ className }: ProductMetadataProps) {
     const root = rootRef.current;
     if (!root) return;
 
-    const syncExpanded = (header: Element) =>
-      header.setAttribute(
-        'aria-expanded',
-        String(!!header.parentElement?.classList.contains('is-open'))
-      );
+    const isOpen = (header: Element) => header.getAttribute('aria-expanded') === 'true';
 
     // Runs on every change under the root: the specs arrive after an async fetch,
-    // and the component can re-render its boxes.
+    // and the component can re-render its boxes (new headers, without attributes).
     let opened = false;
     const setUp = () => {
-      if (!opened) {
-        const first = root.querySelector<HTMLElement>('.s-metadata-box');
-        if (first) {
-          first.classList.add('is-open');
-          opened = true;
-        }
-      }
       root.querySelectorAll('.s-metadata-box-header').forEach((header) => {
-        if (!header.hasAttribute('role')) {
-          header.setAttribute('role', 'button');
-          header.setAttribute('tabindex', '0');
-        }
-        syncExpanded(header);
+        if (header.hasAttribute('aria-expanded')) return;
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('aria-expanded', String(!opened));
+        opened = true;
       });
     };
 
@@ -69,10 +55,8 @@ export function ProductMetadata({ className }: ProductMetadataProps) {
       const header = (event.target as HTMLElement).closest('.s-metadata-box-header');
       return header && root.contains(header) ? header : null;
     };
-    const toggle = (header: Element) => {
-      header.parentElement?.classList.toggle('is-open');
-      syncExpanded(header);
-    };
+    const toggle = (header: Element) =>
+      header.setAttribute('aria-expanded', String(!isOpen(header)));
 
     const onClick = (event: MouseEvent) => {
       const header = headerOf(event);

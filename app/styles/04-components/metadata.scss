@@ -1,7 +1,8 @@
 /* =========================================================================
    Product metadata / specs — the engine `<salla-metadata>` renders flat
    `.s-metadata-box` groups; `ProductMetadata` (app/components/product) makes
-   each one a collapsible accordion by toggling `.is-open` on the box.
+   each one a collapsible accordion; a header's `aria-expanded` says whether
+   its group is open.
    ========================================================================= */
 
 .product-metadata {
@@ -30,7 +31,7 @@
     }
   }
 
-  .s-metadata-box.is-open > .s-metadata-box-header {
+  .s-metadata-box-header[aria-expanded='true'] {
     @apply border-b border-gray-200;
 
     &::after {
@@ -47,7 +48,7 @@
     display: none;
   }
 
-  .s-metadata-box.is-open > .s-metadata-row {
+  .s-metadata-box-header[aria-expanded='true'] ~ .s-metadata-row {
     @apply flex items-center justify-between gap-4 px-2 py-3 text-sm;
 
     &:nth-child(even) {

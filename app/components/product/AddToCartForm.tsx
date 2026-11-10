@@ -19,7 +19,7 @@ import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePriceBump } from '../../hooks/usePriceBump';
-import { ProductOptionsPanel, type PanelOption } from '../common/ProductOptionsPanel';
+import { ProductOptionsPanel, type PanelOption } from '../options';
 
 /** The web component's `type="submit"` path skips its own loader, so drive the
     inner `<salla-button>` spinner by hand. */

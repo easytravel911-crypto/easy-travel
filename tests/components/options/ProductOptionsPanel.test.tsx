@@ -4,7 +4,7 @@ import {
   CollapsibleOptions,
   ProductOptionsPanel,
   type PanelOption,
-} from '../../../app/components/common/ProductOptionsPanel';
+} from '../../../app/components/options/ProductOptionsPanel';
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (key: string) => key }),

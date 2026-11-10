@@ -42,7 +42,27 @@ export default defineConfig(async () => ({
     ],
   },
   environments: {
+    client: {
+      build: {
+        rollupOptions: {
+          output: {
+            // `manualChunks` pulled each chunk's dependencies into it, so `shared-home`
+            // swallowed the shared libraries and passed the 500 kB warning limit.
+            // Groups with `includeDependenciesRecursively: false` keep each module
+            // where `chunkName` puts it. Browser build only: the server build keeps
+            // strict entry signatures, which this option can't be combined with.
+            codeSplitting: {
+              includeDependenciesRecursively: false,
+              groups: [{ name: (id: string) => chunkName(id) ?? null }],
+            },
+          },
+        },
+      },
+    },
     ssr: {
+      build: {
+        rollupOptions: { output: { manualChunks: chunkName } },
+      },
       // The workerd SSR runner can't execute raw CommonJS ("module is not
       // defined") and SSR environments don't pre-bundle deps by default. Pre-
       // optimize the CJS deps that reach SSR: @tanstack/react-query (so the
@@ -84,46 +104,66 @@ export default defineConfig(async () => ({
       external: ['@salla.sa/twilight-components', '@salla.sa/twilight-components/dist/*'],
       output: {
         chunkFileNames: 'assets/[name]-[hash].js',
-        manualChunks(id: string): string | undefined {
-          // Kept apart so the entry, which only waits for the LCP image, imports nothing heavy.
-          if (id.includes('vite/preload-helper')) {
-            return 'preload-helper';
-          }
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-            return 'vendor-react';
-          }
-          if (id.includes('node_modules/@tanstack/react-router/')) {
-            return 'vendor-router';
-          }
-          if (id.includes('node_modules/@uidotdev/usehooks/')) {
-            return 'vendor-hooks';
-          }
-          if (
-            id.includes('/components/common/Breadcrumb') ||
-            id.includes('/components/common/NoContent') ||
-            id.includes('/components/common/Image') ||
-            id.includes('/components/common/Link') ||
-            id.includes('/components/common/CurrencySymbol')
-          ) {
-            return 'shared-common';
-          }
-          if (
-            id.includes('/components/product/ProductCard') ||
-            id.includes('/components/product/ProductDetails') ||
-            id.includes('/components/product/ProductGallery') ||
-            id.includes('/components/product/AddToCartForm')
-          ) {
-            return 'shared-product';
-          }
-          if (
-            id.includes('/components/home/ProductsSlider') ||
-            id.includes('/components/home/Testimonials') ||
-            id.includes('/components/home/HomeComponentRenderer')
-          ) {
-            return 'shared-home';
-          }
-        },
       },
     },
   },
 }));
+
+function chunkName(id: string): string | undefined {
+  // Kept apart so the entry, which only waits for the LCP image, imports nothing heavy.
+  if (id.includes('vite/preload-helper')) {
+    return 'preload-helper';
+  }
+  if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+    return 'vendor-react';
+  }
+  if (id.includes('node_modules/@tanstack/react-router/')) {
+    return 'vendor-router';
+  }
+  if (id.includes('node_modules/@uidotdev/usehooks/')) {
+    return 'vendor-hooks';
+  }
+  // Leaf libraries every page shares. Without their own chunks they land in
+  // `shared-home`, which then passes the 500 kB warning limit.
+  if (id.includes('node_modules/swiper/')) {
+    return 'vendor-swiper';
+  }
+  if (id.includes('node_modules/i18next/') || id.includes('node_modules/react-i18next/')) {
+    return 'vendor-i18n';
+  }
+  if (
+    id.includes('node_modules/@tanstack/query-core/') ||
+    id.includes('node_modules/@tanstack/react-query/') ||
+    id.includes('node_modules/@tanstack/virtual-core/') ||
+    id.includes('node_modules/@tanstack/react-virtual/')
+  ) {
+    return 'vendor-query';
+  }
+  if (id.includes('node_modules/ky/') || id.includes('node_modules/sonner/')) {
+    return 'vendor-net';
+  }
+  if (
+    id.includes('/components/common/Breadcrumb') ||
+    id.includes('/components/common/NoContent') ||
+    id.includes('/components/common/Image') ||
+    id.includes('/components/common/Link') ||
+    id.includes('/components/common/CurrencySymbol')
+  ) {
+    return 'shared-common';
+  }
+  if (
+    id.includes('/components/product/ProductCard') ||
+    id.includes('/components/product/ProductDetails') ||
+    id.includes('/components/product/ProductGallery') ||
+    id.includes('/components/product/AddToCartForm')
+  ) {
+    return 'shared-product';
+  }
+  if (
+    id.includes('/components/home/ProductsSlider') ||
+    id.includes('/components/home/Testimonials') ||
+    id.includes('/components/home/HomeComponentRenderer')
+  ) {
+    return 'shared-home';
+  }
+}
