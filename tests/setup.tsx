@@ -6,6 +6,28 @@ afterEach(() => {
   cleanup();
 });
 
+// Node 25+ ships its own `localStorage` global, which hides jsdom's and has no
+// methods unless Node runs with `--localstorage-file`. Put an in-memory Storage
+// back so tests behave the same on Node 24 (`.nvmrc`) and newer.
+for (const name of ['localStorage', 'sessionStorage'] as const) {
+  if (typeof globalThis[name]?.clear === 'function') continue;
+  const data = new Map<string, string>();
+  const storage: Storage = {
+    get length() {
+      return data.size;
+    },
+    clear: () => data.clear(),
+    getItem: (key) => data.get(String(key)) ?? null,
+    key: (index) => [...data.keys()][index] ?? null,
+    removeItem: (key) => void data.delete(String(key)),
+    setItem: (key, value) => void data.set(String(key), String(value)),
+  };
+  Object.defineProperty(globalThis, name, { configurable: true, value: storage });
+  if (typeof window !== 'undefined' && window !== globalThis) {
+    Object.defineProperty(window, name, { configurable: true, value: storage });
+  }
+}
+
 // jsdom doesn't implement matchMedia. Default to "matches" so components that
 // gate mobile-only behavior behind a media query (e.g. MobileBottomBar's DOM
 // observers) behave as they would on a small screen, matching what the
