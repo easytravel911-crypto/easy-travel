@@ -286,7 +286,7 @@ function EtxIntro() {
         ))}
       </div>
       <div className="etx-intro-logo">
-        <img src={logoUrl} alt="سهل السفر - Easy Travel" width={539} height={600} />
+        <img src={logoUrl} alt="سهل السفر - Easy Travel" width={404} height={450} />
       </div>
       <button className="etx-intro-skip" type="button" onClick={() => finishRef.current()}>
         تخطي ←

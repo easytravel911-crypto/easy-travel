@@ -104,7 +104,8 @@ describe('Header', () => {
     expect(container.querySelector('.site-header__brand img')).toBeTruthy();
     expect(container.querySelector('salla-user-menu')).toBeTruthy();
     expect(container.querySelector('salla-cart-summary')).toBeTruthy();
-    expect(container.querySelector('salla-search')).toBeTruthy();
+    // The search modal lives in ThemeLayout (the mobile app hides the header).
+    expect(container.querySelector('salla-search')).toBeNull();
     // One search trigger, in the actions group opposite the menu button.
     expect(getAllByLabelText('Search')).toHaveLength(1);
     expect(container.querySelector('[data-hook-slot="header:start"]')).toBeTruthy();

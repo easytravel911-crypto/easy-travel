@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { page as pageApi } from '@salla.sa/twilight-theme-engine/api/page';
+import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { PageSingle as EnginePageSingle } from '@salla.sa/twilight-theme-engine/routes/page';
 import { withHead } from '@salla.sa/twilight-theme-engine/tanstack';
 import { PageSingle, type PageSingleProps } from '../components/page/PageSingle';
@@ -25,7 +26,19 @@ export const Route = createFileRoute('/{-$locale}/$slug/page-{$id}')({
   component: PageSingleComponent,
 });
 
+/**
+ * Hook points around the page, so partner apps can inject here as on the other
+ * built-in pages this theme replaces (the `information_page.information_page`
+ * hook inside `PageSingle` stays for `customised` pages).
+ */
 function PageSingleComponent() {
   const data = Route.useLoaderData();
-  return <PageSingle {...data} />;
+  const context = { page: data.page };
+  return (
+    <>
+      <HookSlot name="page:single.start" context={context} />
+      <PageSingle {...data} />
+      <HookSlot name="page:single.end" context={context} />
+    </>
+  );
 }

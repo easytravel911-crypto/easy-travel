@@ -23,6 +23,9 @@ vi.mock('@salla.sa/twilight-theme-engine/hooks/useUser', () => ({
 // Easy Travel's header and footer replace Raed's header, bottom bar and account sheets.
 vi.mock('../../../app/components/etx/EtxFooter', () => ({ EtxFooter: () => <footer /> }));
 vi.mock('../../../app/components/etx/EtxHeader', () => ({ EtxHeader: () => null }));
+vi.mock('@salla.sa/twilight-components-react/search', () => ({
+  SallaSearch: () => <salla-search />,
+}));
 
 /**
  * A `salla.lang` stand-in. `subscribe` keeps the listener, as the SDK does, so
@@ -168,5 +171,14 @@ describe('ThemeLayout square photos image size', () => {
   it('covers when the merchant asks for it, as a saved dropdown or a plain string', () => {
     expect(hasCover({ squar_photo_bg_image_size: [{ value: 'cover' }] })).toBe(true);
     expect(hasCover({ squar_photo_bg_image_size: 'cover' })).toBe(true);
+  });
+});
+
+describe('ThemeLayout search', () => {
+  it('mounts the search modal outside the header, which the mobile app hides', () => {
+    const { container } = render(<ThemeLayout>page</ThemeLayout>);
+    const search = container.querySelector('salla-search');
+    expect(search).toBeTruthy();
+    expect(search!.closest('header')).toBeNull();
   });
 });

@@ -898,7 +898,7 @@ function Cta({ whatsapp }: { whatsapp: string }) {
     <section className="etx-section" id="travel-contact" style={{ paddingTop: 0 }}>
       <div className="etx-container" ref={boxRef}>
         <Reveal variant="zoom" className="etx-cta">
-          <img ref={imgRef} className="etx-cta-bg" src={ctaSkyUrl} alt="" width={1800} height={2700} loading="lazy" />
+          <img ref={imgRef} className="etx-cta-bg" src={ctaSkyUrl} alt="" width={1200} height={1800} loading="lazy" />
           <svg className="etx-cta-plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d={PLANE_PATH} />
           </svg>

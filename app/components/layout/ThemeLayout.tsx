@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import themeTranslations from 'virtual:twilight/theme-translations';
+import { SallaSearch } from '@salla.sa/twilight-components-react/search';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { useUser } from '@salla.sa/twilight-theme-engine/hooks/useUser';
@@ -149,6 +150,10 @@ export function ThemeLayout({ children }: ThemeLayoutProps) {
         </main>
         <EtxFooter />
       </div>
+
+      {/* The search modal sits in the layout, not the header: the Salla mobile app
+          hides the header, and its search button still opens this through `search::open`. */}
+      <SallaSearch suppressHydrationWarning />
 
       <GlobalModals />
     </>

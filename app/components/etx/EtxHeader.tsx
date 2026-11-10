@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouterState } from '@tanstack/react-router';
-import { SallaSearch } from '@salla.sa/twilight-components-react/search';
 import { SallaUserMenu } from '@salla.sa/twilight-components-react/user-menu';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
@@ -116,7 +115,7 @@ export function EtxHeader() {
               <span />
             </button>
             <Link to="/" className="etx-brand" aria-label={store?.name}>
-              <img src={logo} alt={store?.name || 'سهل السفر'} width={539} height={600} fetchPriority="high" />
+              <img src={logo} alt={store?.name || 'سهل السفر'} width={404} height={450} fetchPriority="high" />
             </Link>
           </div>
 
@@ -142,7 +141,6 @@ export function EtxHeader() {
             </a>
           </div>
         </div>
-        <SallaSearch suppressHydrationWarning />
         <HookSlot name="header:end" />
       </header>
       <div className="etx-header-space" aria-hidden="true" style={space ? { height: space } : undefined} />
