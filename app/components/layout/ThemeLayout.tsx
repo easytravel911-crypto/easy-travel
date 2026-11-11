@@ -1,7 +1,10 @@
 import { lazy, Suspense, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import themeTranslations from 'virtual:twilight/theme-translations';
-import { SallaSearch } from '@salla.sa/twilight-components-react/search';
+// `SallaSearch` defers hydration until it scrolls into view; mounted after the
+// footer, it would only start after a scroll to the bottom, and `search::open`
+// would do nothing before that. The core component mounts with the layout.
+import { SallaSearchCore as SallaSearch } from '@salla.sa/twilight-components-react/search';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { useUser } from '@salla.sa/twilight-theme-engine/hooks/useUser';

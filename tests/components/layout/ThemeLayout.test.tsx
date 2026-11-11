@@ -24,7 +24,7 @@ vi.mock('@salla.sa/twilight-theme-engine/hooks/useUser', () => ({
 vi.mock('../../../app/components/etx/EtxFooter', () => ({ EtxFooter: () => <footer /> }));
 vi.mock('../../../app/components/etx/EtxHeader', () => ({ EtxHeader: () => null }));
 vi.mock('@salla.sa/twilight-components-react/search', () => ({
-  SallaSearch: () => <salla-search />,
+  SallaSearchCore: () => <salla-search />,
 }));
 
 /**
