@@ -1,8 +1,8 @@
 {
   "type": "react",
   "name": {
-    "ar": "سهل",
-    "en": "Sahl"
+    "ar": "سهل_ترافل",
+    "en": "EasyTravel"
   },
   "repository": "https://github.com/easytravel911-crypto/easy-travel",
   "author_email": "Easytravel.911@gmail.com",
