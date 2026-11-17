@@ -30,7 +30,6 @@ import {
 import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
 import { registerThemeHooks } from './hooks';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
-import { ProductCard } from './components/product/ProductCard';
 
 const ProductListPage = lazy(() =>
   import('./components/product/ProductListPage').then((m) => ({ default: m.ProductListPage }))
@@ -41,9 +40,10 @@ registerThemeHooks();
 
 registry.register('product:list-page', ProductListPage);
 registry.register('product:list-skeleton', ProductListSkeleton);
-// Easy Travel: the theme card (WhatsApp booking, no price) everywhere the engine renders a card.
-registry.register('product:card', ProductCard);
-registry.override('product:card', ProductCard);
+// The theme card (WhatsApp booking, no price) is NOT registered as `product:card`: it wraps the
+// engine card, and the engine card renders the `product:card` override, so the two would render
+// each other forever (list pages ran the server out of memory). The theme's own lists
+// (ProductListPage, home blocks, sliders) import it directly instead.
 
 registerHomeComponents({
   ...DefaultHomeComponents,
