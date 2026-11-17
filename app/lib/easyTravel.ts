@@ -37,7 +37,7 @@ export function readAgencySettings(settings: Settings): AgencySettings {
   return {
     whatsapp: text(settings, 'et_whatsapp', '966509890653').replace(/\D/g, ''),
     phone: text(settings, 'et_phone', '0509890653'),
-    email: text(settings, 'et_email', 'Easytravel.911@gmail.com'),
+    email: text(settings, 'et_email', 'Support@easytraveel.com'),
     cr: text(settings, 'et_cr', '7055183482'),
     twitter: text(settings, 'et_twitter', 'Easy_traveel'),
     tiktok: text(settings, 'et_tiktok', 'Easy_traveel'),
